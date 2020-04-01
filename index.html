@@ -9,14 +9,28 @@
 
 <body>
     <script>
-        const funkyTerje = (function () {
+        (function () {
 
             const getGlobals = () => Object.keys(window);
             const globalsFromStart = new Set(getGlobals());
-
-            return {
-                getFunctions: () => getGlobals().filter(v=>!globalsFromStart.has(v))
+            const getFunctions = () => getGlobals().filter(v => !globalsFromStart.has(v));
+            let functionNames = new Set();
+            const functions = () => Array.from(functionNames.values()).map(n=>window[n].toString());
+            const show = function () {
+                document.body.innerHTML = functions().map(f=>`
+                    <li><tt>${f}</tt></li>
+                `).join('');
             };
+            const checkForNewFunction = function () {
+                const latestFunctions = getFunctions();
+                const newFunctions = latestFunctions.filter(f => !functionNames.has(f));
+                if (newFunctions.length === 0) return;
+                functionNames = new Set(latestFunctions);
+                show();
+            };
+            const timer = setInterval(checkForNewFunction, 2000);
+
+
         })();
     </script>
 </body>

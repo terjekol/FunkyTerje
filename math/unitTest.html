@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>QUnit Example</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.9.2.css">
+</head>
+
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="https://code.jquery.com/qunit/qunit-2.9.2.js"></script>
+    <script src="lexer.js"></script>
+    <script>
+        QUnit.test('5+5', function (assert) {
+            const tokens = lex('5+5')
+            assert.deepEqual(tokens, ['5', '+', '5']);
+        });
+
+        QUnit.test('5+15', function (assert) {
+            const tokens = lex('5+15')
+            assert.deepEqual(tokens, ['5', '+', '15']);
+        });
+    </script>
+</body>
+
+</html>

@@ -7,7 +7,7 @@
 
 //parse(['x']);
 // parse(['x','+','y']);
-// parse(['x','+','y','*',2]);
+console.log(parse(['x', '+', 'y', '*', '2']));
 
 /*
 Eparser is
@@ -114,6 +114,8 @@ function parseParenthesisValueOrUnary(tokens) {
         tokens.shift();
         const state = parseFactor(tokens);
         return makeState(tokens, makeNode('-', state.tree));
+    } else {
+        console.error('Error in parseParenthesisValueOrUnary. Tokens: ', tokens)
     }
 }
 

@@ -8,7 +8,7 @@
 //parse(['x']);
 // parse(['x','+','y']);
 // console.log(parse(['x', '+', 'y', '*', '2']));
-console.log(parse(['x', '+', '1', '/', '(', 'y', '+', '2', ')']));
+//console.log(parse(['x', '+', '1', '/', '(', 'y', '+', '2', ')']));
 
 function show(mathText) {
     const tokens = lex(mathText);
@@ -24,6 +24,7 @@ function createNodeHtml(node) {
     if (node.operator === '/') return `
         <div class="flex vertical">
             ${createHtml(node.content[0])}
+            <div class="fraction">&nbsp;</div>
             ${createHtml(node.content[1])}
         </div>
         `;

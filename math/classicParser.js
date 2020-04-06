@@ -7,46 +7,18 @@
 
 //parse(['x']);
 // parse(['x','+','y']);
-console.log(parse(['x', '+', 'y', '*', '2']));
+// console.log(parse(['x', '+', 'y', '*', '2']));
+console.log(parse(['x', '+', '1', '/', '(', 'y', '+', '2', ')']));
 
-/*
-Eparser is
-   var t : Tree
-   t := E
-   expect( end )
-   return t
-*/
 function parse(tokens) {
     const state = parseExpression(tokens);
     return state.tokens.length > 0 ? null : state.tree;
 }
 
-/*
-E is
-   var t : Tree
-   t := T
-   while next = "+" or next = "-"
-      const op := binary(next)
-      consume
-      const t1 := T
-      t := mkNode( op, t, t1 )
-   return t
-*/
 function parseExpression(tokens) {
     return parseMultipart(tokens, '+-', parseTerm);
 }
 
-/*
-T is
-   var t : Tree
-   t := F
-   while next = "*" or next = "/"
-      const op := binary(next)
-      consume
-      const t1 := F
-      t := mkNode( op, t, t1 )
-   return t
-*/
 function parseTerm(tokens) {
     return parseMultipart(tokens, '*/', parseFactor);
 }
@@ -62,17 +34,6 @@ function parseMultipart(tokens, operators, parseFn) {
     return partState1;
 }
 
-/*
-F is
-   var t : Tree
-   t := P
-   if next = "^"
-        consume
-        const t1 := F
-        return mkNode( binary("^"), t, t1)
-   else
-        return t
-*/
 function parseFactor(tokens) {
     const state = parseParenthesisValueOrUnary(tokens);
     let myTokens = state.tokens;
@@ -82,25 +43,6 @@ function parseFactor(tokens) {
     return makeState(myTokens, makeNode('^', state.tree, factorState.tree));
 }
 
-/*
-P is
-   var t : Tree
-   if next is a v
-        t := mkLeaf( next )
-        consume
-        return t
-   else if next = "("
-        consume
-        t := E
-        expect( ")" )
-        return t   
-   else if next = "-"
-        consume
-        t := F
-        return mkNode( unary("-"), t)
-   else 
-        error
-*/
 function parseParenthesisValueOrUnary(tokens) {
     if (isNumberOrLetter(tokens[0])) {
         const value = tokens.shift();
@@ -108,7 +50,7 @@ function parseParenthesisValueOrUnary(tokens) {
     } else if (tokens[0] === '(') {
         tokens.shift();
         const state = parseExpression(tokens);
-        if (tokens.shift !== ')') console.error('expected )');
+        if (tokens.shift() !== ')') console.error('expected )');
         return state;
     } else if (tokens[0] === '-') {
         tokens.shift();
@@ -124,7 +66,7 @@ function isNumberOrLetter(text) {
 }
 
 function makeNode(operator, left, right) {
-    return { operator, left, right };
+    return { operator, content:[left, right] };
 }
 
 function makeLeaf(value) {

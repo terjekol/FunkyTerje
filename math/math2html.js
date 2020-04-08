@@ -1,3 +1,9 @@
+function createMenuHtml(options){
+    return Object.keys(options).map(f=>`
+        <button onclick="doMath('${f}')">${model.mathOperations[f].icon.replace(/\n/g,'<br/>')}</button>
+    `).join('');
+}
+
 function showMathText(mathText) {
     const tree = parseMathText(mathText);
     document.getElementById('mathContent').innerHTML = createHtml(tree);

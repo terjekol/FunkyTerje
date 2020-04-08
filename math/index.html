@@ -52,17 +52,13 @@
     <div id="mathContent"></div>
 
     <script>
-        model.mathText = 'x+1/(x+2)=5';   
+        model.mathText = 'x+1/(x+2)=5';
         updateView();
 
-        function updateView(){
+        function updateView() {
             document.getElementById('menuBar').innerHTML = createMenuHtml(model.mathOperations);
-            showMathText(model.mathText);    
-            // function selectOneTerm() {
-            // function selectFactorInNumerator() {
-            // function selectFactorInDenominator() {
-            // function selectFactor() {
-
+            const highlight = !math.onGoingMathOperation ? null : math.onGoingMathOperation.step;
+            showMathText(model.mathText, highlight);
         }
     </script>
 </body>

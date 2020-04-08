@@ -6,10 +6,10 @@ function createMenuHtml(options) {
 
 function showMathText(mathText, highlight) {
     const tree = parseMathText(mathText);
-    document.getElementById('mathContent').innerHTML = createHtml(tree, hightlight);
+    document.getElementById('mathContent').innerHTML = createHtml(tree, highlight);
 }
 
-function createHtml(node, hightlight) {
+function createHtml(node, highlight) {
     return node.value != undefined ? `<div>${node.value.trim()}</div>` : createNodeHtml(node, highlight);
 }
 
@@ -21,11 +21,22 @@ function createNodeHtml(node, highlight) {
             ${createHtml(node.content[1], highlight)}
         </div>
         `;
-    if (node.content.length > 1 && '+-'.includes(node.operator)) return `
+    if (node.content.length > 1 && node.operator === '=') return `
         <div class="flex">
             ${node.content.map(n => createHtml(n, highlight)).join(`<div>${node.operator.trim()}</div>`)}
         </div>
         `;
+    if (node.content.length > 1 && '+-'.includes(node.operator)) {
+        const shouldHighlight = highlight === 'selectOneTerm';
+        const wrapStart = shouldHighlight ? '<div class="highlight">' : '';
+        const wrapEnd = shouldHighlight ? '</div>' : '';
+        return `
+        <div class="flex">
+            ${node.content.map(n => wrapStart + createHtml(n, highlight) + wrapEnd)
+                .join(`<div>${node.operator.trim()}</div>`)}
+        </div>
+        `;
+    }
     if (node.content.length > 1 && node.operator === '*') return `
         <div class="flex">
             ${node.content.map(n => createHtml(n, highlight)).join(`<div>${node.operator.trim()}</div>`)}

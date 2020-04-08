@@ -7,10 +7,10 @@ function doMath(functionName) {
 }
 
 function doMathImpl() {
-    const selectedFunction = model.onGoingMathOperation;
-    const functionName = selectedFunction.name;
-    const functionDescription = mathOperations[functionName];
-    if (!functionDescription.steps) {
+    const operation = model.onGoingMathOperation;
+    const functionName =  operation.name;
+    const selectedFunction = model.mathOperations[functionName];
+    if (!selectedFunction.steps) {
         console.error('unknown function ' + functionName);
         return;
     }

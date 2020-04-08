@@ -57,7 +57,8 @@
 
         function updateView() {
             document.getElementById('menuBar').innerHTML = createMenuHtml(model.mathOperations);
-            const highlight = !math.onGoingMathOperation ? null : math.onGoingMathOperation.step;
+            const operation = model.onGoingMathOperation;
+            const highlight = operation ? operation.step : null;
             showMathText(model.mathText, highlight);
         }
     </script>

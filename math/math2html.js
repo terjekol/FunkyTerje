@@ -5,6 +5,7 @@ function createMenuHtml(options) {
 }
 
 function showMathText(mathText, highlight) {
+    console.log(highlight);
     const tree = parseMathText(mathText);
     document.getElementById('mathContent').innerHTML = createHtml(tree, highlight);
 }

@@ -1,4 +1,4 @@
-function doMath(functionName) {
+function doMath(functionName) {    
     model.onGoingMathOperation = {
         name: functionName,
         arguments: [],
@@ -14,6 +14,7 @@ function doMathImpl() {
         console.error('unknown function ' + functionName);
         return;
     }
+    console.log(selectedFunction);
     const stepIndex = model.onGoingMathOperation.arguments.length;
     const step = selectedFunction.steps[stepIndex];
     model.onGoingMathOperation.step = step;

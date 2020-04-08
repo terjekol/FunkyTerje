@@ -10,21 +10,26 @@ function createMathText(mathText, highlight) {
     return createHtml(tree, highlight);
 }
 
-function createHtml(node, highlight) {
-    return node.value != undefined ? `<div>${node.value.trim()}</div>` : createNodeHtml(node, highlight);
+function createHtml(node, highlight, parentOperator) {
+    if (node.value != undefined) {
+        return `<div>${node.value.trim()}</div>`;
+    } else {
+        return createNodeHtml(node, highlight);
+    }
 }
 
 function createNodeHtml(node, highlight) {
-    if (node.operator === '/') return `
+    const op = node.operator;
+    if (op === '/') return `
         <div class="flex vertical">
-            ${createHtml(node.content[0], highlight)}
+            ${createHtml(node.content[0], highlight, op)}
             <div class="fraction">&nbsp;</div>
-            ${createHtml(node.content[1], highlight)}
+            ${createHtml(node.content[1], highlight, op)}
         </div>
         `;
-    if (node.content.length > 1 && node.operator === '=') return `
+    if (node.content.length > 1 && op === '=') return `
         <div class="flex">
-            ${node.content.map(n => createHtml(n, highlight)).join(`<div>${node.operator.trim()}</div>`)}
+            ${node.content.map(n => createHtml(n, highlight, op)).join(`<div>${node.operator.trim()}</div>`)}
         </div>
         `;
     // if (node.content.length > 1 && '+-'.includes(node.operator)) {
@@ -40,13 +45,13 @@ function createNodeHtml(node, highlight) {
     // }
     if (node.content.length > 1) return `
         <div class="flex">
-            ${node.content.map(n => createHtml(n, highlight)).join(`<div>${node.operator.trim()}</div>`)}
+            ${node.content.map(n => createHtml(n, highlight, op)).join(`<div>${node.operator.trim()}</div>`)}
         </div>
         `;
-    if (node.operator === '-' && node.content.length === 1) return `
+    if (op === '-' && node.content.length === 1) return `
         <div class="flex">
             <div>-</div>
-            ${createHtml(node.content[0], highlight)}
+            ${createHtml(node.content[0], highlight, op)}
         </div>
         `;
     console.error('cannot create HTML', node);

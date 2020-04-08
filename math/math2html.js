@@ -11,11 +11,14 @@ function createMathText(mathText, highlight) {
 }
 
 function createHtml(node, highlight, parentOperator) {
-    if (node.value != undefined) {
-        return `<div>${node.value.trim()}</div>`;
-    } else {
-        return createNodeHtml(node, highlight);
+    const isLeaf = node.value != undefined;
+    let html = isLeaf ? `<div>${node.value.trim()}</div>` : createNodeHtml(node, highlight);
+    if (highlight === 'selectOneTerm') {
+    } else if (highlight === 'selectFactor') {
+    } else if (highlight === 'selectFactorInNumerator') {
+    } else if (highlight === 'selectFactorInDenominator') {
     }
+    return html;
 }
 
 function createNodeHtml(node, highlight) {

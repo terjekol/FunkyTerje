@@ -12,8 +12,10 @@
 //setTimeout(() => show('2+x-1'), 100);
 
 function parseMathText(mathText) {
-    if (mathText.includes('=')) {
-        [leftSide, rightSide] = mathText.split('=');
+    const equalSignIndex = mathText.indexOf('=');
+    if (equalSignIndex >= 0) {
+        const leftSide = mathText.substr(0, equalSignIndex);
+        const rightSide = mathText.substr(equalSignIndex + 1);
         return makeNode('=', parseMathText(leftSide), parseMathText(rightSide));
     }
 

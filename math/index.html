@@ -7,6 +7,7 @@
     <title>Document</title>
     <script src="parser.js"></script>
     <script src="math2html.js"></script>
+    <script src="mathOperations.js.js"></script>
     <style>
         * {
             font-size: 80pt;
@@ -27,15 +28,40 @@
             height: 0px;
             width: 100%;
         }
+
+        #menuBar {
+            display: flex;
+        }
+
+        button {
+            width: 70px;
+            height: 70px;
+            font-size: 20pt;
+            line-height: 0.6em;
+            margin: 5px;
+            text-align: center;
+        }
     </style>
 </head>
 
 <body>
-    <div id="menuBar"></div>
+    <div id="menuBar">
+        <button onclick="doMath('mergeTerms')">Σ</button>
+        <button onclick="doMath('subtractTermOnBothSides')">|-</button>
+        <button onclick="doMath('moveTermToOtherSide')">↷<br />=</button>
+        <button onclick="doMath('divideBothSides')">|÷</button>
+        <button onclick="doMath('reduceFraction')">/<br />‒<br />/</button>
+        <button onclick="doMath('primeFactorize')">•<br />⭩⭨</button>
+
+    </div>
     <div id="mathContent"></div>
 
     <script>
-        showMathText('x+1/(x+2)=5');    
+        const model = {
+            mathText: 'x+1/(x+2)=5'
+        };
+        showMathText(model.mathText);    
     </script>
 </body>
+
 </html>

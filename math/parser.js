@@ -23,37 +23,6 @@ function parseMathText(mathText) {
     return parse(tokens);
 }
 
-function showMathText(mathText) {
-    const tokens = lex(mathText);
-    const tree = parse(tokens);
-    document.body.innerHTML = createHtml(tree);
-}
-
-function createHtml(node) {
-    return node.value != undefined ? `<div>${node.value.trim()}</div>` : createNodeHtml(node);
-}
-
-function createNodeHtml(node) {
-    if (node.operator === '/') return `
-        <div class="flex vertical">
-            ${createHtml(node.content[0])}
-            <div class="fraction">&nbsp;</div>
-            ${createHtml(node.content[1])}
-        </div>
-        `;
-    if (node.content.length > 1) return `
-        <div class="flex">
-            ${node.content.map(n => createHtml(n)).join(`<div>${node.operator.trim()}</div>`)}
-        </div>
-        `;
-    if (node.operator === '-' && node.content.length === 1) return `
-        <div class="flex">
-            <div>-</div>
-            ${createHtml(node.content[0])}
-        </div>
-        `;
-}
-
 function lex(mathText) {
     const isDigit = char => char >= '0' && char <= '9';
     const lastCharacter = text => text.length === 0 ? null : text[text.length - 1];

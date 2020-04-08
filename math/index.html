@@ -10,7 +10,11 @@
     <script src="mathOperations.js"></script>
     <script src="model.js"></script>
     <style>
-        * {
+        div.txt {
+            font-size: 20pt;
+        }
+
+        div.math {
             font-size: 80pt;
         }
 
@@ -50,21 +54,39 @@
 </head>
 
 <body>
-    <div id="menuBar">
-
-    </div>
-    <div id="mathContent"></div>
+    <div id="app"></div>
 
     <script>
         model.mathText = 'x+1/(x+2)=5';
         updateView();
 
         function updateView() {
-            document.getElementById('menuBar').innerHTML = createMenuHtml(model.mathOperations);
-            const operation = model.onGoingMathOperation;
-            const highlight = operation ? operation.step : null;
-            showMathText(model.mathText, highlight);
+
+            document.getElementById('app').innerHTML = `
+                <div id="menuBar">${createMenuHtml(model.mathOperations)}</div>
+                <div id="text" class="txt">${getText()}</div>
+                <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
+            `;
         }
+
+        function getStep() {
+            const operation = model.onGoingMathOperation;
+            return operation ? operation.step : null;
+        }
+
+        function getText() {
+            const operation = model.onGoingMathOperation;
+            if (!operation) return '';
+            const step = operation ? operation.step : null;
+            if (!step) return '';
+            const operationName = operation.name;
+            const mathOperation = model.mathOperations[operationName];
+            const description = mathOperation.description;
+            const stepNo = operation.arguments.length + 1;
+            const stepText = stepNo + ': ' + (!step ? '' : model.steps[step])
+            return  description + '<br/>' + stepText;
+        }
+
     </script>
 </body>
 

@@ -10,19 +10,41 @@ function createMathText(mathText, highlight) {
     return createHtml(tree, highlight);
 }
 
-function createHtml(node, highlight, parentOperator) {
+function createHtml(node, highlight, parentOperator, showOperator) {
     const isLeaf = node.value != undefined;
-    let html = isLeaf ? `<div>${node.value.trim()}</div>` : createNodeHtml(node, highlight);
-    if (highlight === 'selectOneTerm') {
-    } else if (highlight === 'selectFactor') {
-    } else if (highlight === 'selectFactorInNumerator') {
-    } else if (highlight === 'selectFactorInDenominator') {
-    }
+    const cssClass = getHighlightCssClass(highlight, node, parentOperator);
+    let html = isLeaf ? `<div class="${cssClass}">${node.value.trim()}</div>` : createNodeHtml(node, highlight);
+    if (showOperator) html = `<div class="${cssClass}">${parentOperator.trim()}</div>` + html;
     return html;
 }
 
+function getHighlightCssClass(highlight, node, parentOperator) {
+    const useHighlight = highlight === 'selectOneTerm' && isTerm(node, parentOperator)
+        || highlight === 'selectFactor' && isFactor(node, parentOperator)
+        || highlight === 'selectFactorInNumerator' && isNumerator(node, parentOperator)
+        || highlight === 'selectFactorInDenominator' && isDenominator(node, parentOperator);
+    return useHighlight ? 'highlight' : '';
+}
+function isTerm(node, operator) {
+    if (operator !== '=' && node.parent && node.parent.operator !== '=') return false;
+    const isLeaf = node.value != undefined;
+    return '+-'.includes(operator) || operator === '=' && isLeaf;
+}
+
+function isFactor() {
+    return false;
+}
+
+function isNumerator() {
+    return false;
+}
+
+function isDenominator() {
+    return false;
+}
+
 function createNodeHtml(node, highlight) {
-    const op = node.operator;
+    const op = node.operator.trim();
     if (op === '/') return `
         <div class="flex vertical">
             ${createHtml(node.content[0], highlight, op)}
@@ -30,9 +52,10 @@ function createNodeHtml(node, highlight) {
             ${createHtml(node.content[1], highlight, op)}
         </div>
         `;
-    if (node.content.length > 1 && op === '=') return `
+    if (node.content.length == 2) return `
         <div class="flex">
-            ${node.content.map(n => createHtml(n, highlight, op)).join(`<div>${node.operator.trim()}</div>`)}
+            ${createHtml(node.content[0], highlight, op)}            
+            ${createHtml(node.content[1], highlight, op, true)}
         </div>
         `;
     // if (node.content.length > 1 && '+-'.includes(node.operator)) {
@@ -46,11 +69,11 @@ function createNodeHtml(node, highlight) {
     //     </div>
     //     `;
     // }
-    if (node.content.length > 1) return `
-        <div class="flex">
-            ${node.content.map(n => createHtml(n, highlight, op)).join(`<div>${node.operator.trim()}</div>`)}
-        </div>
-        `;
+    // if (node.content.length > 1) return `
+    //     <div class="flex">
+    //         ${node.content.map(n => createHtml(n, highlight, op)).join(`<div>${node.operator.trim()}</div>`)}
+    //     </div>
+    //     `;
     if (op === '-' && node.content.length === 1) return `
         <div class="flex">
             <div>-</div>

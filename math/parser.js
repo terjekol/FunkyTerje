@@ -13,14 +13,29 @@
 
 function parseMathText(mathText) {
     const equalSignIndex = mathText.indexOf('=');
-    if (equalSignIndex >= 0) {
-        const leftSide = mathText.substr(0, equalSignIndex);
-        const rightSide = mathText.substr(equalSignIndex + 1);
-        return makeNode('=', parseMathText(leftSide), parseMathText(rightSide));
+    if (equalSignIndex == -1) {
+        const tokens = lex(mathText);
+        return parse(tokens);
     }
+    const leftSide = mathText.substr(0, equalSignIndex);
+    const rightSide = mathText.substr(equalSignIndex + 1);
+    const leftSideTree = parseMathText(leftSide);
+    const rightSideTree = parseMathText(rightSide);
+    console.log(rightSide, rightSideTree);
+    let tree = makeNode('=', [leftSideTree, rightSideTree]);
+    tree = addParent(tree, null);
+    console.log(tree);
+    return tree;
+}
 
-    const tokens = lex(mathText);
-    return parse(tokens);
+function addParent(node, parent) {
+    if (!node) return;
+    node.parent = parent;
+    if (!node.content) return;
+    for (var child of node.content) {
+        addParent(child, node);
+    }
+    return node;
 }
 
 function lex(mathText) {
@@ -52,7 +67,7 @@ function parseMultipart(tokens, operators, parseFn) {
     while (operators.includes(partState1.tokens[0])) {
         const operator = partState1.tokens.shift();
         const partState2 = parseFn(partState1.tokens);
-        partState1.tree = makeNode(operator, partState1.tree, partState2.tree)
+        partState1.tree = makeNode(operator, [partState1.tree, partState2.tree])
         partState1.tokens = partState2.tokens;
     }
     return partState1;
@@ -64,7 +79,7 @@ function parseFactor(tokens) {
     if (myTokens[0] !== '^') return state;
     myTokens.shift();
     const factorState = parseFactor(myTokens);
-    return makeState(factorState.tokens, makeNode('^', state.tree, factorState.tree));
+    return makeState(factorState.tokens, makeNode('^', [state.tree, factorState.tree]));
 }
 
 function parseParenthesisValueOrUnary(tokens) {
@@ -79,7 +94,7 @@ function parseParenthesisValueOrUnary(tokens) {
     } else if (tokens[0] === '-') {
         tokens.shift();
         const state = parseFactor(tokens);
-        return makeState(tokens, makeNode('-', state.tree));
+        return makeState(tokens, makeNode('-', [state.tree]));
     } else {
         console.error('Error in parseParenthesisValueOrUnary. Tokens: ', tokens)
     }
@@ -89,8 +104,8 @@ function isNumberOrLetter(text) {
     return text[0] >= '0' && text[0] <= '9' || text[0] >= 'a' && text[0] <= 'z';
 }
 
-function makeNode(operator, left, right) {
-    return { operator, content: [left, right] };
+function makeNode(operator, content) {
+    return { operator, content };
 }
 
 function makeLeaf(value) {

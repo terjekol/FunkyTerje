@@ -1,28 +1,28 @@
 const model = {
-    mathText: 'x+1/(x+2)=5',
+    mathText: null,
     mathOperations: {
         subtractTermOnBothSides: {
-            steps: [selectOneTerm],
+            steps: ['selectOneTerm'],
             icon: '|-',
         },            
         moveTermToOtherSide: {
-            steps:[selectOneTerm],
+            steps:['selectOneTerm'],
             icon: '↷\n=',
         },            
         mergeTerms: {
-            steps:[selectOneTerm, selectOneTerm],
+            steps:['selectOneTerm', 'selectOneTerm'],
             icon: 'Σ',
         },            
         reduceFraction: {
-            steps:[selectFactorInNumerator, selectFactorInDenominator],
+            steps:['selectFactorInNumerator', 'selectFactorInDenominator'],
             icon: '/\n‒\n/',
         },            
         divideBothSides: {
-            steps:[selectFactor],
+            steps:['selectFactor'],
             icon: '|÷',
         },            
         primeFactorize: {
-            steps:[selectFactor],
+            steps:['selectFactor'],
             icon: '•\n⭩⭨',
         },            
     },

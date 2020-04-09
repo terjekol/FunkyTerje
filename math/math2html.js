@@ -10,26 +10,28 @@ function createMathText(mathText, highlight) {
     return createHtml(tree, highlight);
 }
 
-function createHtml(node, highlight, parentOperator, showOperator) {
+function createHtml(node, highlight, showOperator) {
     const isLeaf = node.value != undefined;
-    const cssClass = getHighlightCssClass(highlight, node, parentOperator);
-    let html = isLeaf ? `<div class="${cssClass.main}">${node.value.trim()}</div>` : createNodeHtml(node, highlight);
-    if (showOperator) html = `<div class="${cssClass.op}">${parentOperator.trim()}</div>` + html;
+    const cssClass = getHighlightCssClass(highlight, node);
+    let html = isLeaf ? node.value.trim() : createNodeHtml(node, highlight);
+    html = `<div class="${cssClass.main}">${html}</div>`;
+    if (showOperator) html = `<div class="${cssClass.op}">${node.parent.operator.trim()}</div>` + html;
     return html;
 }
 
-function getHighlightCssClass(highlight, node, parentOperator) {
-    const useHighlight = highlight === 'selectOneTerm' && isTerm(node, parentOperator)
-        || highlight === 'selectFactor' && isFactor(node, parentOperator)
-        || highlight === 'selectFactorInNumerator' && isNumerator(node, parentOperator)
-        || highlight === 'selectFactorInDenominator' && isDenominator(node, parentOperator);
+function getHighlightCssClass(highlight, node) {
+    const useHighlight = highlight === 'selectOneTerm' && isTerm(node)
+        || highlight === 'selectFactor' && isFactor(node)
+        || highlight === 'selectFactorInNumerator' && isNumerator(node)
+        || highlight === 'selectFactorInDenominator' && isDenominator(node);
     const highlightCss = useHighlight ? 'highlight' : '';
-    return { main: highlightCss, op: parentOperator === '=' ? '' : highlightCss };
+    return { main: highlightCss, op: node.parent && node.parent.operator === '=' ? '' : highlightCss };
 }
-function isTerm(node, operator) {
-    if (operator !== '=' && node.parent && node.parent.operator !== '=') return false;
+
+function isTerm(node) {
+    if (node.operator !== '=' && node.parent && node.parent.operator !== '=') return false;
     const isLeaf = node.value != undefined;
-    return '+-'.includes(operator) || operator === '=' && isLeaf;
+    return '+-'.includes(node.operator) || node.operator === '=' && isLeaf;
 }
 
 function isFactor() {
@@ -48,15 +50,15 @@ function createNodeHtml(node, highlight) {
     const op = node.operator.trim();
     if (op === '/') return `
         <div class="flex vertical">
-            ${createHtml(node.content[0], highlight, op)}
+            ${createHtml(node.content[0], highlight)}
             <div class="fraction">&nbsp;</div>
-            ${createHtml(node.content[1], highlight, op)}
+            ${createHtml(node.content[1], highlight)}
         </div>
         `;
     if (node.content.length == 2) return `
         <div class="flex">
-            ${createHtml(node.content[0], highlight, op)}            
-            ${createHtml(node.content[1], highlight, op, true)}
+            ${createHtml(node.content[0], highlight)}            
+            ${createHtml(node.content[1], highlight, true)}
         </div>
         `;
     // if (node.content.length > 1 && '+-'.includes(node.operator)) {
@@ -78,7 +80,7 @@ function createNodeHtml(node, highlight) {
     if (op === '-' && node.content.length === 1) return `
         <div class="flex">
             <div>-</div>
-            ${createHtml(node.content[0], highlight, op)}
+            ${createHtml(node.content[0], highlight)}
         </div>
         `;
     console.error('cannot create HTML', node);

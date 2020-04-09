@@ -13,10 +13,13 @@ function createMathText(mathText, highlight) {
 function createHtml(node, highlight, showOperator) {
     const isLeaf = node.value != undefined;
     const cssClass = getHighlightCssClass(highlight, node);
-    let html = isLeaf ? node.value.trim() : createNodeHtml(node, highlight);
-    html = `<div class="${cssClass.main}">${html}</div>`;
-    if (showOperator) html = `<div class="${cssClass.op}">${node.parent.operator.trim()}</div>` + html;
-    return html;
+    const operatorHtml = showOperator ? `<div>${node.parent.operator.trim()}</div>` : '';
+    const includeOperatorInSameHtml = node.operator !== '=';
+    const contentHtml = isLeaf ? `<div>${node.value.trim()}</div>` : createNodeHtml(node, highlight);
+    // return `${operatorHtml}<div class="${cssClass}">${contentHtml}</div>`;
+    return includeOperatorInSameHtml
+        ? `<div class="flex ${cssClass}">${operatorHtml}${contentHtml}</div>`
+        : `${operatorHtml}<div class="flex ${cssClass}">${contentHtml}</div>`
 }
 
 function getHighlightCssClass(highlight, node) {
@@ -24,8 +27,7 @@ function getHighlightCssClass(highlight, node) {
         || highlight === 'selectFactor' && isFactor(node)
         || highlight === 'selectFactorInNumerator' && isNumerator(node)
         || highlight === 'selectFactorInDenominator' && isDenominator(node);
-    const highlightCss = useHighlight ? 'highlight' : '';
-    return { main: highlightCss, op: parentOperator(node) === '=' ? '' : highlightCss };
+    return useHighlight ? 'highlight' : '';
 }
 
 function isTerm(node) {

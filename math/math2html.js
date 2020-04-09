@@ -14,7 +14,7 @@ function createHtml(node, highlight, showOperator) {
     const isLeaf = node.value != undefined;
     const isActive = getIsActive(highlight, node);
     const cssClass = isActive ? 'highlight' : '';
-    const onclick = isActive ? `onclick="doMath(${nodeToString(node)})"` : '';
+    const onclick = isActive ? `onclick="doMath('${nodeToString(node)}')"` : '';
     const operatorHtml = showOperator ? `<div>${node.parent.operator.trim()}</div>` : '';
     const includeOperatorInSameHtml = node.operator !== '=';
     const contentHtml = isLeaf ? `<div>${node.value.trim()}</div>` : createNodeHtml(node, highlight);
@@ -26,7 +26,10 @@ function createHtml(node, highlight, showOperator) {
 
 function nodeToString(node) {
     const isLeaf = node.value != undefined;
-    if (isLeaf) return node.value;
+    if (isLeaf) {
+        const sign = parentOperator(node) === '-' && node == node.parent.content[1] ? '-' : '';
+        return sign + node.value;
+    }
     if (node.content.length === 1) return node.operator + nodeToString(node.content[0]);
     return nodeToString(node.content[0]) + node.operator + nodeToString(node.content[1]);
 }

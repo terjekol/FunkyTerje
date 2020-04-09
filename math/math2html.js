@@ -1,7 +1,13 @@
 function createMenuHtml(options) {
     return Object.keys(options).map(f => `
-        <button onclick="selectMath('${f}')">${model.mathOperations[f].icon.replace(/\n/g, '<br/>')}</button>
+        <button onclick="selectMath('${f}')">${getIcon(f)}</button>
     `).join('');
+}
+
+function getIcon(f) {
+    return model.mathOperations[f].icon
+        .replace(/\n/g, '<br/>')
+        .replace(/ /g, '&nbsp;');
 }
 
 function createMathText(mathText, highlight) {

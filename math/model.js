@@ -19,7 +19,7 @@ const model = {
         },            
         mergeTerms: {
             steps:['selectOneTerm', 'selectOneTerm'],
-            icon: 'Σ',
+            icon: '⭨⭩\n•',
             description: 'Slå sammen ledd',
         },            
         reduceFraction: {

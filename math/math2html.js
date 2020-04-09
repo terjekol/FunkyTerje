@@ -25,13 +25,13 @@ function getHighlightCssClass(highlight, node) {
         || highlight === 'selectFactorInNumerator' && isNumerator(node)
         || highlight === 'selectFactorInDenominator' && isDenominator(node);
     const highlightCss = useHighlight ? 'highlight' : '';
-    return { main: highlightCss, op: node.parent && node.parent.operator === '=' ? '' : highlightCss };
+    return { main: highlightCss, op: parentOperator(node) === '=' ? '' : highlightCss };
 }
 
 function isTerm(node) {
-    if (node.operator !== '=' && node.parent && node.parent.operator !== '=') return false;
     const isLeaf = node.value != undefined;
-    return '+-'.includes(node.operator) || node.operator === '=' && isLeaf;
+    return '+-'.includes(parentOperator(node)) && parentParentOperator(node) === '='
+        || parentOperator(node) === '=' && isLeaf;
 }
 
 function isFactor() {
@@ -61,22 +61,6 @@ function createNodeHtml(node, highlight) {
             ${createHtml(node.content[1], highlight, true)}
         </div>
         `;
-    // if (node.content.length > 1 && '+-'.includes(node.operator)) {
-    //     const shouldHighlight = highlight === 'selectOneTerm';
-    //     const wrapStart = shouldHighlight ? '<div class="highlight">' : '';
-    //     const wrapEnd = shouldHighlight ? '</div>' : '';
-    //     return `
-    //     <div class="flex">
-    //         ${node.content.map(n => wrapStart + createHtml(n, highlight) + wrapEnd)
-    //             .join(`<div>${node.operator.trim()}</div>`)}
-    //     </div>
-    //     `;
-    // }
-    // if (node.content.length > 1) return `
-    //     <div class="flex">
-    //         ${node.content.map(n => createHtml(n, highlight, op)).join(`<div>${node.operator.trim()}</div>`)}
-    //     </div>
-    //     `;
     if (op === '-' && node.content.length === 1) return `
         <div class="flex">
             <div>-</div>
@@ -84,4 +68,12 @@ function createNodeHtml(node, highlight) {
         </div>
         `;
     console.error('cannot create HTML', node);
+}
+
+function parentOperator(node) {
+    return node.parent ? node.parent.operator : null;
+}
+
+function parentParentOperator(node) {
+    return node.parent && node.parent.parent ? node.parent.parent.operator : null;
 }

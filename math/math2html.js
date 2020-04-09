@@ -1,6 +1,6 @@
 function createMenuHtml(options) {
     return Object.keys(options).map(f => `
-        <button onclick="doMath('${f}')">${model.mathOperations[f].icon.replace(/\n/g, '<br/>')}</button>
+        <button onclick="selectMath('${f}')">${model.mathOperations[f].icon.replace(/\n/g, '<br/>')}</button>
     `).join('');
 }
 
@@ -12,22 +12,30 @@ function createMathText(mathText, highlight) {
 
 function createHtml(node, highlight, showOperator) {
     const isLeaf = node.value != undefined;
-    const cssClass = getHighlightCssClass(highlight, node);
+    const isActive = getIsActive(highlight, node);
+    const cssClass = isActive ? 'highlight' : '';
+    const onclick = isActive ? `onclick="doMath(${nodeToString(node)})"` : '';
     const operatorHtml = showOperator ? `<div>${node.parent.operator.trim()}</div>` : '';
     const includeOperatorInSameHtml = node.operator !== '=';
     const contentHtml = isLeaf ? `<div>${node.value.trim()}</div>` : createNodeHtml(node, highlight);
     // return `${operatorHtml}<div class="${cssClass}">${contentHtml}</div>`;
     return includeOperatorInSameHtml
-        ? `<div class="flex ${cssClass}">${operatorHtml}${contentHtml}</div>`
-        : `${operatorHtml}<div class="flex ${cssClass}">${contentHtml}</div>`
+        ? `<div class="flex ${cssClass}" ${onclick}>${operatorHtml}${contentHtml}</div>`
+        : `${operatorHtml}<div class="flex ${cssClass}" ${onclick}>${contentHtml}</div>`
 }
 
-function getHighlightCssClass(highlight, node) {
-    const useHighlight = highlight === 'selectOneTerm' && isTerm(node)
+function nodeToString(node) {
+    const isLeaf = node.value != undefined;
+    if (isLeaf) return node.value;
+    if (node.content.length === 1) return node.operator + nodeToString(node.content[0]);
+    return nodeToString(node.content[0]) + node.operator + nodeToString(node.content[1]);
+}
+
+function getIsActive(highlight, node) {
+    return highlight === 'selectOneTerm' && isTerm(node)
         || highlight === 'selectFactor' && isFactor(node)
         || highlight === 'selectFactorInNumerator' && isNumerator(node)
         || highlight === 'selectFactorInDenominator' && isDenominator(node);
-    return useHighlight ? 'highlight' : '';
 }
 
 function isTerm(node) {

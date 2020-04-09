@@ -1,12 +1,12 @@
-function doMath(functionName) {    
+function selectMath(functionName) {    
     model.onGoingMathOperation = {
         name: functionName,
         arguments: [],
     };
-    doMathImpl();
+    selectMathImpl();
 }
 
-function doMathImpl() {
+function selectMathImpl() {
     const operation = model.onGoingMathOperation;
     const functionName =  operation.name;
     const selectedFunction = model.mathOperations[functionName];
@@ -19,5 +19,9 @@ function doMathImpl() {
     const step = selectedFunction.steps[stepIndex];
     model.onGoingMathOperation.step = step;
     updateView();
+}
+
+function doMath(arg){
+    
 }
 

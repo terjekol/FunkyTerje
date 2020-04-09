@@ -13,8 +13,8 @@ function createMathText(mathText, highlight) {
 function createHtml(node, highlight, parentOperator, showOperator) {
     const isLeaf = node.value != undefined;
     const cssClass = getHighlightCssClass(highlight, node, parentOperator);
-    let html = isLeaf ? `<div class="${cssClass}">${node.value.trim()}</div>` : createNodeHtml(node, highlight);
-    if (showOperator) html = `<div class="${cssClass}">${parentOperator.trim()}</div>` + html;
+    let html = isLeaf ? `<div class="${cssClass.main}">${node.value.trim()}</div>` : createNodeHtml(node, highlight);
+    if (showOperator) html = `<div class="${cssClass.op}">${parentOperator.trim()}</div>` + html;
     return html;
 }
 
@@ -23,7 +23,8 @@ function getHighlightCssClass(highlight, node, parentOperator) {
         || highlight === 'selectFactor' && isFactor(node, parentOperator)
         || highlight === 'selectFactorInNumerator' && isNumerator(node, parentOperator)
         || highlight === 'selectFactorInDenominator' && isDenominator(node, parentOperator);
-    return useHighlight ? 'highlight' : '';
+    const highlightCss = useHighlight ? 'highlight' : '';
+    return { main: highlightCss, op: parentOperator === '=' ? '' : highlightCss };
 }
 function isTerm(node, operator) {
     if (operator !== '=' && node.parent && node.parent.operator !== '=') return false;

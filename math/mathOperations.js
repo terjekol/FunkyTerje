@@ -79,14 +79,14 @@ function mergeTerms(indexes1, indexes2) {
 
 function removeNode(node) {
     const parent = node.parent;
-    if (parent.operator === '-') {
-        const parentContent = selectedNode2.parent.content;
+    if (parent.operator === '-' && indexWithParent(node) === 0) {
+        parent.content.shift();
     } else {
         replaceNode(parent, siblingNode(node));
     }
 }
 
-function siblingNode(node){
+function siblingNode(node) {
     const index = indexWithParent(node);
     const siblingIndex = otherIndex(index);
     return node.parent.content[siblingIndex];
@@ -96,11 +96,11 @@ function replaceNode(node, newNode) {
     node.parent.content[indexWithParent(node)] = newNode;
 }
 
-function otherIndex(index){
+function otherIndex(index) {
     return index === 1 ? 0 : 1;
 }
 
-function indexWithParent(node){
+function indexWithParent(node) {
     return node.parent.content[0] === node ? 0 : 1;
 }
 

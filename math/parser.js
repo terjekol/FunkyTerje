@@ -21,11 +21,19 @@ function parseMathText(mathText) {
     const rightSide = mathText.substr(equalSignIndex + 1);
     const leftSideTree = parseMathText(leftSide);
     const rightSideTree = parseMathText(rightSide);
-    console.log(rightSide, rightSideTree);
     let tree = makeNode('=', [leftSideTree, rightSideTree]);
     tree = addParent(tree, null);
-    console.log(tree);
     return tree;
+}
+
+function toString(node) {
+    const txt = node.value != undefined ? node.value :
+        node.content.length == 1 ? node.operator + toString(node.content[0]) :
+            toString(node.content[0]) + node.operator + toString(node.content[1]);
+    if ('+-'.includes(node.operator) && !'=+-'.includes(node.parent.operator)) {
+        return '(' + txt + ')';
+    }
+    return txt;
 }
 
 function addParent(node, parent) {

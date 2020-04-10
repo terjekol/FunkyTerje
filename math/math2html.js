@@ -11,7 +11,6 @@ function getIcon(f) {
 }
 
 function createMathText(mathText, highlight) {
-    console.log(highlight);
     const tree = parseMathText(mathText);
     return createHtml(tree, highlight);
 }
@@ -24,7 +23,6 @@ function createHtml(node, highlight, showOperator) {
     const operatorHtml = showOperator ? `<div>${node.parent.operator.trim()}</div>` : '';
     const includeOperatorInSameHtml = node.operator !== '=';
     const contentHtml = isLeaf ? `<div>${node.value.trim()}</div>` : createNodeHtml(node, highlight);
-    // return `${operatorHtml}<div class="${cssClass}">${contentHtml}</div>`;
     return includeOperatorInSameHtml
         ? `<div class="flex ${cssClass}" ${onclick}>${operatorHtml}${contentHtml}</div>`
         : `${operatorHtml}<div class="flex ${cssClass}" ${onclick}>${contentHtml}</div>`
@@ -80,12 +78,15 @@ function createNodeHtml(node, highlight) {
             ${createHtml(node.content[1], highlight)}
         </div>
         `;
-    if (node.content.length == 2) return `
+    if (node.content.length == 2) {
+        const showOperator = node.operator !== '*' || showMultiplicationOperator(node);
+        return `
         <div class="flex">
             ${createHtml(node.content[0], highlight)}            
-            ${createHtml(node.content[1], highlight, true)}
+            ${createHtml(node.content[1], highlight, showOperator)}
         </div>
         `;
+    }
     if (op === '-' && node.content.length === 1) return `
         <div class="flex">
             <div>-</div>
@@ -93,6 +94,18 @@ function createNodeHtml(node, highlight) {
         </div>
         `;
     console.error('cannot create HTML', node);
+}
+
+function showMultiplicationOperator(node) {
+    return isLetter(node.content[0]) && isNumber(node.content[1]);
+}
+
+function isLetter(node) {
+    return node.value && node.value.length === 1 && node.value >= 'a' && node.value <= 'z';
+}
+
+function isNumber(node) {
+    return node.value && node.value.filter(c => c < '0' || c > '9').length === 0;
 }
 
 function parentOperator(node) {

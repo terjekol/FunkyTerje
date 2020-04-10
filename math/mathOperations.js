@@ -1,4 +1,5 @@
 function selectMath(functionName) {
+    model.errorMessage = '';
     model.onGoingMathOperation = {
         name: functionName,
         arguments: [],
@@ -14,7 +15,6 @@ function selectMathImpl() {
         console.error('unknown function ' + functionName);
         return;
     }
-    console.log(selectedFunction);
     const stepIndex = model.onGoingMathOperation.arguments.length;
     const step = selectedFunction.steps[stepIndex];
     model.onGoingMathOperation.step = step;
@@ -72,9 +72,32 @@ function mergeTerms(indexes1, indexes2) {
     const tree = parseMathText(model.mathText);
     const selectedNode1 = nodeFromIndexes(indexes1, tree);
     const selectedNode2 = nodeFromIndexes(indexes2, tree);
+    const firstIndexOnRightSide = nodeToPath(tree.content[1]);
+    const node1Side = nodeToPath(selectedNode1) < firstIndexOnRightSide;
+    const node2Side = nodeToPath(selectedNode2) < firstIndexOnRightSide;
+    if (node1Side !== node2Side) {
+        model.errorMessage = 'Kan bare slå sammen ledd som er på samme side av ligningen.';
+        resetAndUpdateView();
+        return;
+    }
+    if (!nodesAreEqual(selectedNode1, selectedNode2)) {
+        model.errorMessage = 'Kan ikke slå sammen leddene.';
+        resetAndUpdateView();
+        return;
+    }
     removeNode(selectedNode2);
     model.mathText = toString(tree);
     resetAndUpdateView();
+}
+
+function nodesAreEqual(node1, node2) {
+    const equalPrimitives = node1.value && node2.value && node1.value === node2.value;
+    if (equalPrimitives) return true;
+    return node1.operator === node2.operator
+        && node1.content && node2.content
+        && nodesAreEqual(node1.content[0], node2.content[1])
+        && node1.content.length > 1 && node2.content.length > 1
+        && nodesAreEqual(node1.content[0], node2.content[1]);
 }
 
 function removeNode(node) {

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script src="common.js"></script>
     <script src="parser.js"></script>
     <script src="math2html.js"></script>
     <script src="mathOperations.js"></script>
@@ -71,6 +72,7 @@
             document.getElementById('app').innerHTML = `
                 <div id="menuBar">${createMenuHtml(model.mathOperations)}</div>
                 <div id="text" class="txt">${getText()}</div>
+                <div style="color:red">${model.errorMessage || ''}</div>
                 <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
             `;
         }

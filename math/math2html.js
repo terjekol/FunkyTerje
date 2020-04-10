@@ -28,12 +28,6 @@ function createHtml(node, highlight, showOperator) {
         : `${operatorHtml}<div class="flex ${cssClass}" ${onclick}>${contentHtml}</div>`
 }
 
-function nodeToPath(node) {
-    if (!node.parent) return '';
-    const lastChoice = node.parent.content[0] === node ? '0' : '1';
-    return nodeToPath(node.parent) + lastChoice;
-}
-
 function nodeToString(node) {
     const isLeaf = node.value != undefined;
     if (isLeaf) {

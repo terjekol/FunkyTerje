@@ -71,11 +71,8 @@ function moveTermToOtherSide(indexes) {
 function mergeTerms(indexes1, indexes2) {
     const tree = parseMathText(model.mathText);
     const selectedNode1 = nodeFromIndexes(indexes1, tree);
-    const selectedNode2 = nodeFromIndexes(indexes2, tree);
-    const firstIndexOnRightSide = nodeToPath(tree.content[1]);
-    const node1Side = nodeToPath(selectedNode1) < firstIndexOnRightSide;
-    const node2Side = nodeToPath(selectedNode2) < firstIndexOnRightSide;
-    if (node1Side !== node2Side) {
+    const selectedNode2 = nodeFromIndexes(indexes2, tree);    
+    if (nodesAreOnSeparateSides(selectedNode1, selectedNode2, tree)) {
         model.errorMessage = 'Kan bare slå sammen ledd som er på samme side av ligningen.';
         resetAndUpdateView();
         return;
@@ -88,6 +85,13 @@ function mergeTerms(indexes1, indexes2) {
     removeNode(selectedNode2);
     model.mathText = toString(tree);
     resetAndUpdateView();
+}
+
+function nodesAreOnSeparateSides(node1, node2, tree){
+    const firstIndexOnRightSide = nodeToPath(tree.content[1]);
+    const node1Side = nodeToPath(node1) < firstIndexOnRightSide;
+    const node2Side = nodeToPath(node2) < firstIndexOnRightSide;
+    return node1Side !== node2Side;
 }
 
 function nodesAreEqual(node1, node2) {

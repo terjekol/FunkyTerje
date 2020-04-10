@@ -20,7 +20,7 @@ function createHtml(node, highlight, showOperator) {
     const isLeaf = node.value != undefined;
     const isActive = getIsActive(highlight, node);
     const cssClass = isActive ? 'highlight' : '';
-    const onclick = isActive ? `onclick="doMath('${nodeToString(node)}')"` : '';
+    const onclick = isActive ? `onclick="doMath('${nodeToPath(node)}')"` : '';
     const operatorHtml = showOperator ? `<div>${node.parent.operator.trim()}</div>` : '';
     const includeOperatorInSameHtml = node.operator !== '=';
     const contentHtml = isLeaf ? `<div>${node.value.trim()}</div>` : createNodeHtml(node, highlight);
@@ -28,6 +28,12 @@ function createHtml(node, highlight, showOperator) {
     return includeOperatorInSameHtml
         ? `<div class="flex ${cssClass}" ${onclick}>${operatorHtml}${contentHtml}</div>`
         : `${operatorHtml}<div class="flex ${cssClass}" ${onclick}>${contentHtml}</div>`
+}
+
+function nodeToPath(node) {
+    if (!node.parent) return '';
+    const lastChoice = node.parent.content[0] === node ? '0' : '1';
+    return nodeToPath(node.parent) + lastChoice;
 }
 
 function nodeToString(node) {

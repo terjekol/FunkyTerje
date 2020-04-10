@@ -22,7 +22,7 @@ function parseMathText(mathText) {
     const leftSideTree = parseMathText(leftSide);
     const rightSideTree = parseMathText(rightSide);
     let tree = makeNode('=', [leftSideTree, rightSideTree]);
-    tree = addParent(tree, null);
+    tree = addParentAndId(tree, null);
     return tree;
 }
 
@@ -30,18 +30,18 @@ function toString(node) {
     const txt = node.value != undefined ? node.value :
         node.content.length == 1 ? node.operator + toString(node.content[0]) :
             toString(node.content[0]) + node.operator + toString(node.content[1]);
-    if ('+-'.includes(node.operator) && !'=+-'.includes(node.parent.operator)) {
+    if ('+-'.includes(node.operator) && !'=+-'.includes(parentOperator(node))) {
         return '(' + txt + ')';
     }
     return txt;
 }
 
-function addParent(node, parent) {
+function addParentAndId(node, parent) {
     if (!node) return;
     node.parent = parent;
     if (!node.content) return;
     for (var child of node.content) {
-        addParent(child, node);
+        addParentAndId(child, node);
     }
     return node;
 }

@@ -33,7 +33,7 @@ function doMath(arg) {
             args.push(arg);
             updateView();
         } else {
-            mergeTerms(args[0], args[1]);
+            mergeTerms(args[0], arg);
         }
     } else if (operation.name === 'reduceFraction') {
     } else if (operation.name === 'divideBothSides') {
@@ -54,6 +54,73 @@ function subtractTermOnBothSides(indexes) {
     resetAndUpdateView();
 }
 
+function moveTermToOtherSide(indexes) {
+    const tree = parseMathText(model.mathText);
+    const selectedNode = nodeFromIndexes(indexes, tree);
+    delete selectedNode.operator;
+    delete selectedNode.content;
+    selectedNode.value = '0';
+    const newTree = makeNode('=', [
+        makeNode('-', [tree.content[0], cloneNode(selectedNode)]),
+        makeNode('-', [tree.content[1], cloneNode(selectedNode)]),
+    ]);
+    model.mathText = toString(newTree);
+    resetAndUpdateView();
+}
+
+function mergeTerms(indexes1, indexes2) {
+    const tree = parseMathText(model.mathText);
+    const selectedNode1 = nodeFromIndexes(indexes1, tree);
+    const selectedNode2 = nodeFromIndexes(indexes2, tree);
+    removeNode(selectedNode2);
+    model.mathText = toString(tree);
+    resetAndUpdateView();
+}
+
+function removeNode(node) {
+    const parent = node.parent;
+    if (parent.operator === '-') {
+        const parentContent = selectedNode2.parent.content;
+    } else {
+        replaceNode(parent, siblingNode(node));
+    }
+}
+
+function siblingNode(node){
+    const index = indexWithParent(node);
+    const siblingIndex = otherIndex(index);
+    return node.parent.content[siblingIndex];
+}
+
+function replaceNode(node, newNode) {
+    node.parent.content[indexWithParent(node)] = newNode;
+}
+
+function otherIndex(index){
+    return index === 1 ? 0 : 1;
+}
+
+function indexWithParent(node){
+    return node.parent.content[0] === node ? 0 : 1;
+}
+
+function reduceFraction(indexes1, indexes2) {
+    resetAndUpdateView();
+}
+
+function divideBothSides(indexes) {
+    resetAndUpdateView();
+}
+
+function primeFactorize(indexes) {
+    resetAndUpdateView();
+}
+
+function resetAndUpdateView(indexes) {
+    model.onGoingMathOperation = null;
+    updateView();
+}
+
 function cloneNode(node) {
     if (node.value != undefined) return { value: node.value };
     return node.content.length === 1
@@ -68,29 +135,3 @@ function nodeFromIndexes(indexes, tree) {
     }
     return node;
 }
-
-function moveTermToOtherSide(arg) {
-    resetAndUpdateView();
-}
-
-function mergeTerms(arg1, arg2) {
-    resetAndUpdateView();
-}
-
-function reduceFraction(arg1, arg2) {
-    resetAndUpdateView();
-}
-
-function divideBothSides(arg) {
-    resetAndUpdateView();
-}
-
-function primeFactorize(arg) {
-    resetAndUpdateView();
-}
-
-function resetAndUpdateView(arg) {
-    model.onGoingMathOperation = null;
-    updateView();
-}
-

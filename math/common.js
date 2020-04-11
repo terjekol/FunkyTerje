@@ -17,8 +17,13 @@ function isUnaryMinus(node) {
 }
 
 function isTopLevelTerm(node) {
-    const isLeaf = node.value != undefined;
-    return '+-'.includes(parentOperator(node)) && parentParentOperator(node) === '='
-        || parentOperator(node) === '=' && isLeaf;
+    if ('=+-'.includes(node.operator) && node.content.length === 2) return false;
+    return firstParentOperatorOtherThan('+-', node) === '=';
+}
+
+function firstParentOperatorOtherThan(operators, node) {
+    return operators.includes(node.parent.operator) 
+        ? firstParentOperatorOtherThan(operators, node.parent)
+        : node.parent.operator;
 }
 

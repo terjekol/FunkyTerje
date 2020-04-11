@@ -80,11 +80,16 @@ function mergeTerms(indexes1, indexes2) {
     }
     const extraction1 = extractConstant(selectedNode1);
     const extraction2 = extractConstant(selectedNode2);
-    if (!nodesAreEqual(extraction1.theRest, extraction2.theRest)) {
+
+    const oneOrBothRestsIsNull = extraction1.theRest === null || extraction2.theRest === null;
+    const bothRestsAreNull = extraction1.theRest === null && extraction2.theRest === null;
+    if (!bothRestsAreNull && (oneOrBothRestsIsNull || !nodesAreEqual(extraction1.theRest, extraction2.theRest))) {
         return finishWithError('Leddene kan ikke slås sammen.');
     }
     const newSum = extraction1.constant + extraction2.constant;
-    if (newSum === 1) {
+    if (bothRestsAreNull) {
+        replaceNode(selectedNode2, createConstantNode(newSum));
+    } else if (newSum === 1) {
         replaceNode(selectedNode1, extraction1.theRest);
     } else if (newSum === 0) {
         removeNode(selectedNode1);

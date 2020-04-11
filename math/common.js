@@ -9,7 +9,7 @@ function isLetter(node) {
 }
 
 function isNumber(node) {
-    return node.value && node.value.filter(c => c < '0' || c > '9').length === 0;
+    return node.value && node.value.split('').filter(c => c < '0' || c > '9').length === 0;
 }
 
 function isUnaryMinus(node) {
@@ -22,8 +22,13 @@ function isTopLevelTerm(node) {
 }
 
 function firstParentOperatorOtherThan(operators, node) {
-    return operators.includes(node.parent.operator) 
+    return operators.includes(node.parent.operator)
         ? firstParentOperatorOtherThan(operators, node.parent)
         : node.parent.operator;
+}
+
+function createConstantNode(constant) {
+    const node = { value: Math.abs(constant) };
+    return constant < 0 ? makeNode('-', [node]) : node;
 }
 

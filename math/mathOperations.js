@@ -71,23 +71,62 @@ function moveTermToOtherSide(indexes) {
 function mergeTerms(indexes1, indexes2) {
     const tree = parseMathText(model.mathText);
     const selectedNode1 = nodeFromIndexes(indexes1, tree);
-    const selectedNode2 = nodeFromIndexes(indexes2, tree);    
+    const selectedNode2 = nodeFromIndexes(indexes2, tree);
     if (nodesAreOnSeparateSides(selectedNode1, selectedNode2, tree)) {
-        model.errorMessage = 'Kan bare slå sammen ledd som er på samme side av ligningen.';
-        resetAndUpdateView();
-        return;
+        return finishWithError('Kan bare slå sammen ledd som er på samme side av ligningen.');
     }
-    if (!nodesAreEqual(selectedNode1, selectedNode2)) {
-        model.errorMessage = 'Kan ikke slå sammen leddene.';
-        resetAndUpdateView();
-        return;
+    if (!isTopLevelTerm(selectedNode1) || !isTopLevelTerm(selectedNode2)) {
+        return finishWithError('Kan bare slå sammen ledd som er på toppnivå på høyre eller venstre side av ligningen.');
     }
+    const extraction1 = extractConstant(selectedNode1);
+    const extraction2 = extractConstant(selectedNode2);
+    if (!nodesAreEqual(extraction1.theRest, extraction2.theRest)) {
+        return finishWithError('Leddene kan ikke slås sammen.');
+    }
+    const newSum = extraction1.constant + extraction2.constant;
+    if (newSum === 1) {
+        replaceNode(selectedNode1, extraction1.theRest);
+    } else if (newSum === 0) {
+        removeNode(selectedNode1);
+    } else if (newSum < 0) {
+        const negativConstantUnary = makeNode('-', [{ value: -1 * newSum }]);
+        replaceNode(selectedNode1, makeNode('*', negativConstantUnary, extraction1.theRest));
+    } else {
+        replaceNode(selectedNode1, makeNode('*', [{ value: newSum }], extraction1.theRest));
+    }
+
     removeNode(selectedNode2);
     model.mathText = toString(tree);
     resetAndUpdateView();
 }
 
-function nodesAreOnSeparateSides(node1, node2, tree){
+function finishWithError(errorMessage) {
+    model.errorMessage = errorMessage;
+    resetAndUpdateView();
+    return 'dummy';
+}
+
+function extractConstant(node) {
+    if (isNumber(node)) return { constant: node.value, theRest: null };
+    if (isLetter(node)) return { constant: 1, theRest: { value: node.value } };
+    if (isUnaryMinus(node)) {
+        const constantAndTheRest = extractConstant(node.content[0]);
+        constantAndTheRest.constant *= -1;
+        return constantAndTheRest;
+    }
+    if (!'*/'.includes(node.operator)) {
+        console.error('unexpected operator: ' + node.operator, node);
+    }
+    const isMultiplication = node.operator === '*';
+    const product = cloneNode(isMultiplication ? node : node.content[1]);
+    if (!isNumber(product.content[0])) return { constant: 1, theRest: cloneNode(node) };
+    if (isMultiplication) return { constant: product.content[0].value, theRest: product.content[1] };
+    const constant = product.content[0].value;
+    const theRest = makeNode('/', [product.content[1], cloneNode(node.content[0])]);
+    return { constant, theRest };
+}
+
+function nodesAreOnSeparateSides(node1, node2, tree) {
     const firstIndexOnRightSide = nodeToPath(tree.content[1]);
     const node1Side = nodeToPath(node1) < firstIndexOnRightSide;
     const node2Side = nodeToPath(node2) < firstIndexOnRightSide;

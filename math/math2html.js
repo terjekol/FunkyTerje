@@ -39,16 +39,10 @@ function nodeToString(node) {
 }
 
 function getIsActive(highlight, node) {
-    return highlight === 'selectOneTerm' && isTerm(node)
+    return highlight === 'selectOneTerm' && isTopLevelTerm(node)
         || highlight === 'selectFactor' && isFactor(node)
         || highlight === 'selectFactorInNumerator' && isNumerator(node)
         || highlight === 'selectFactorInDenominator' && isDenominator(node);
-}
-
-function isTerm(node) {
-    const isLeaf = node.value != undefined;
-    return '+-'.includes(parentOperator(node)) && parentParentOperator(node) === '='
-        || parentOperator(node) === '=' && isLeaf;
 }
 
 function isFactor() {
@@ -92,14 +86,6 @@ function createNodeHtml(node, highlight) {
 
 function showMultiplicationOperator(node) {
     return isLetter(node.content[0]) && isNumber(node.content[1]);
-}
-
-function isLetter(node) {
-    return node.value && node.value.length === 1 && node.value >= 'a' && node.value <= 'z';
-}
-
-function isNumber(node) {
-    return node.value && node.value.filter(c => c < '0' || c > '9').length === 0;
 }
 
 function parentOperator(node) {

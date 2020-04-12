@@ -93,21 +93,47 @@ function mergeTerms(indexes1, indexes2) {
         removeNode(selectedNode1);
         removeNode(selectedNode2);
     } else if (isPositive1 === isPositive2) {
-        selectedNode1.value = Math.abs(newSum);
+        adjustConstant(selectedNode1, newSum);
         removeNode(selectedNode2);
     } else {
         const positiveNode = isPositive1 ? selectedNode1 : selectedNode2;
         const negativeNode = isPositive1 ? selectedNode2 : selectedNode1;
         if (newSum > 0) {
-            positiveNode.value = newSum;
+            adjustConstant(positiveNode, newSum);
             removeNode(negativeNode);
         } else {
-            negativeNode.value = Math.abs(newSum);
+            adjustConstant(negativeNode, newSum);
             removeNode(positiveNode);
         }
     }
     model.mathText = toString(tree);
     resetAndUpdateView();
+}
+
+function adjustConstant(node, newConstant) {
+    if (isNumber(node)) {
+        node.value = Math.abs(newConstant);
+        return;
+    }
+    if (node.operator === '*') {
+        adjustConstantInProduct(node, newConstant);
+        return;
+    }
+    if (node.operator === '/') {
+        adjustConstant(node.content[0], newConstant);
+        return;
+    }
+    throw "cannot adjust constant in " + toString(node);
+}
+
+function adjustConstantInProduct(node, newConstant) {
+    if (isNumber(node)) {
+        node.value = Math.abs(newConstant);
+        return true;
+    }
+    if (node.operator !== '*') return false;
+    return adjustConstantInProduct(node.content[0], newConstant)
+        || adjustConstantInProduct(node.content[1], newConstant);
 }
 
 /*

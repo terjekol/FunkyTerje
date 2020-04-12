@@ -87,6 +87,35 @@ function mergeTerms(indexes1, indexes2) {
         return finishWithError('Leddene kan ikke slås sammen.');
     }
     const newSum = parseInt(extraction1.constant) + parseInt(extraction2.constant);
+    const isFirstPositiveAndSecondNegative = extraction1.constant > 0 && extraction2.constant < 0;
+    const nodeA = isFirstPositiveAndSecondNegative ? selectedNode2 : selectedNode1;
+    const nodeB = nodeA === selectedNode1 ? selectedNode2 : selectedNode1;
+    nodeA.value = Math.abs(newSum);
+    removeNode(nodeB);
+    model.mathText = toString(tree);
+    resetAndUpdateView();
+}
+
+/*
+function mergeTerms(indexes1, indexes2) {
+    const tree = parseMathText(model.mathText);
+    const selectedNode1 = nodeFromIndexes(indexes1, tree);
+    const selectedNode2 = nodeFromIndexes(indexes2, tree);
+    if (nodesAreOnSeparateSides(selectedNode1, selectedNode2, tree)) {
+        return finishWithError('Kan bare slå sammen ledd som er på samme side av ligningen.');
+    }
+    if (!isTopLevelTerm(selectedNode1) || !isTopLevelTerm(selectedNode2)) {
+        return finishWithError('Kan bare slå sammen ledd som er på toppnivå på høyre eller venstre side av ligningen.');
+    }
+    const extraction1 = extractConstant(selectedNode1);
+    const extraction2 = extractConstant(selectedNode2);
+
+    const oneOrBothRestsIsNull = extraction1.theRest === null || extraction2.theRest === null;
+    const bothRestsAreNull = extraction1.theRest === null && extraction2.theRest === null;
+    if (!bothRestsAreNull && (oneOrBothRestsIsNull || !nodesAreEqual(extraction1.theRest, extraction2.theRest))) {
+        return finishWithError('Leddene kan ikke slås sammen.');
+    }
+    const newSum = parseInt(extraction1.constant) + parseInt(extraction2.constant);
     if (bothRestsAreNull) {
         const isFirstPositiveAndSecondNegative = extraction1.constant > 0 && extraction2.constant < 0;
         const nodeA = isFirstPositiveAndSecondNegative ? selectedNode2 : selectedNode1;
@@ -109,6 +138,7 @@ function mergeTerms(indexes1, indexes2) {
     model.mathText = toString(tree);
     resetAndUpdateView();
 }
+*/
 
 function finishWithError(errorMessage) {
     model.errorMessage = errorMessage;

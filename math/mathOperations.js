@@ -89,7 +89,7 @@ function mergeTerms(indexes1, indexes2) {
     const newSum = parseInt(extraction1.constant)
         + parseInt(extraction2.constant);
     if (bothRestsAreNull) {
-        replaceNode(selectedNode2, createConstantNode(newSum));
+        replaceNode(selectedNode1, createConstantNode(newSum));
     } else if (newSum === 1) {
         replaceNode(selectedNode1, extraction1.theRest);
     } else if (newSum === 0) {

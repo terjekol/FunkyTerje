@@ -88,19 +88,24 @@ function mergeTerms(indexes1, indexes2) {
     }
     const newSum = parseInt(extraction1.constant) + parseInt(extraction2.constant);
     if (bothRestsAreNull) {
-        replaceNode(selectedNode1, createConstantNode(newSum));
-    } else if (newSum === 1) {
-        replaceNode(selectedNode1, extraction1.theRest);
-    } else if (newSum === 0) {
-        removeNode(selectedNode1);
-    } else if (newSum < 0) {
-        const negativConstantUnary = makeNode('-', [createConstantNode(-1 * newSum)]);
-        replaceNode(selectedNode1, makeNode('*', [negativConstantUnary, extraction1.theRest]));
+        const isFirstPositiveAndSecondNegative = extraction1.constant > 0 && extraction2.constant < 0;
+        const nodeA = isFirstPositiveAndSecondNegative ? selectedNode2 : selectedNode1;
+        const nodeB = nodeA === selectedNode1 ? selectedNode2 : selectedNode1;
+        nodeA.value = Math.abs(newSum);
+        removeNode(nodeB);
     } else {
-        replaceNode(selectedNode1, makeNode('*', [createConstantNode(newSum), extraction1.theRest]));
+        if (newSum === 1) {
+            replaceNode(selectedNode1, extraction1.theRest);
+        } else if (newSum === 0) {
+            removeNode(selectedNode1);
+        } else if (newSum < 0) {
+            const negativConstantUnary = makeNode('-', [createConstantNode(-1 * newSum)]);
+            replaceNode(selectedNode1, makeNode('*', [negativConstantUnary, extraction1.theRest]));
+        } else {
+            replaceNode(selectedNode1, makeNode('*', [createConstantNode(newSum), extraction1.theRest]));
+        }
+        removeNode(selectedNode2);
     }
-
-    removeNode(selectedNode2);
     model.mathText = toString(tree);
     resetAndUpdateView();
 }

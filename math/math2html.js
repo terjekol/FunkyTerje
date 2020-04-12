@@ -76,9 +76,8 @@ function createNodeHtml(node, highlight) {
         `;
     }
     if (op === '-' && node.content.length === 1) return `
-        <div class="flex">
-            <div>-</div>
-            ${createHtml(node.content[0], highlight)}
+        <div class="flex">            
+        (-${createHtml(node.content[0], highlight)})
         </div>
         `;
     console.error('cannot create HTML', node);

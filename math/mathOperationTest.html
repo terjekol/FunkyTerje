@@ -34,6 +34,15 @@
             assert.equal(newMathText, 'x=1');
         });
 
+        QUnit.test("extract negative constant", function (assert) {
+            // =([0]x,-([10]1,[11]2))
+            const tree = parseMathText('x=1-2');
+            const node = nodeFromIndexes('11', tree);
+            const extraction = extractConstant(node);
+            assert.equal(extraction.constant, '-2');
+            assert.equal(extraction.theRest, null);
+        });
+
         // plus
         QUnit.test("merge terms - plus + plus", function (assert) {
             testMergeTerms('x=1+2', '10', '11', 'x=3', assert);

@@ -19,7 +19,7 @@ function createHtml(node, highlight, showOperator) {
     const isLeaf = node.value != undefined;
     const isActive = getIsActive(highlight, node);
     const cssClass = isActive ? 'highlight' : '';
-    const onclick = isActive ? `onclick="doMath('${nodeToPath(node)}')"` : '';
+    const onclick = isActive ? `onclick="doMath('${indexesFromNode(node)}')"` : '';
     const operatorHtml = showOperator ? `<div>${node.parent.operator.trim()}</div>` : '';
     const includeOperatorInSameHtml = node.operator !== '=';
     const contentHtml = isLeaf ? `<div>${node.value.trim()}</div>` : createNodeHtml(node, highlight);

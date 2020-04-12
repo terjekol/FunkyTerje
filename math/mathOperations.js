@@ -86,8 +86,7 @@ function mergeTerms(indexes1, indexes2) {
     if (!bothRestsAreNull && (oneOrBothRestsIsNull || !nodesAreEqual(extraction1.theRest, extraction2.theRest))) {
         return finishWithError('Leddene kan ikke slås sammen.');
     }
-    const newSum = parseInt(extraction1.constant)
-        + parseInt(extraction2.constant);
+    const newSum = parseInt(extraction1.constant) + parseInt(extraction2.constant);
     if (bothRestsAreNull) {
         replaceNode(selectedNode1, createConstantNode(newSum));
     } else if (newSum === 1) {
@@ -113,8 +112,8 @@ function finishWithError(errorMessage) {
 }
 
 function extractConstant(node) {
-    if (isNumber(node)) return { constant: node.value, theRest: null };
-    if (isLetter(node)) return { constant: 1, theRest: { value: node.value } };
+    if (isNumber(node)) return { constant: node.value * getSignFromParent(node), theRest: null };
+    if (isLetter(node)) return { constant: getSignFromParent(node), theRest: { value: node.value } };
     if (isUnaryMinus(node)) {
         const constantAndTheRest = extractConstant(node.content[0]);
         constantAndTheRest.constant *= -1;
@@ -132,10 +131,18 @@ function extractConstant(node) {
     return { constant, theRest };
 }
 
+function getSignFromParent(node) {
+    return isSecondPartOfMinus(node) ? -1 : 1;
+}
+
+function isSecondPartOfMinus(node) {
+    return parentOperator(node) === '-' && node === node.parent.content[1];
+}
+
 function nodesAreOnSeparateSides(node1, node2, tree) {
-    const firstIndexOnRightSide = nodeToPath(tree.content[1]);
-    const node1Side = nodeToPath(node1) < firstIndexOnRightSide;
-    const node2Side = nodeToPath(node2) < firstIndexOnRightSide;
+    const firstIndexOnRightSide = indexesFromNode(tree.content[1]);
+    const node1Side = indexesFromNode(node1) < firstIndexOnRightSide;
+    const node2Side = indexesFromNode(node2) < firstIndexOnRightSide;
     return node1Side !== node2Side;
 }
 
@@ -200,10 +207,3 @@ function cloneNode(node) {
         : makeNode(node.operator, [cloneNode(node.content[0]), cloneNode(node.content[1])]);
 }
 
-function nodeFromIndexes(indexes, tree) {
-    let node = tree;
-    for (let index of indexes) {
-        node = node.content[index];
-    }
-    return node;
-}

@@ -1,7 +1,15 @@
-function nodeToPath(node) {
+function indexesFromNode(node) {
     if (!node.parent) return '';
     const lastChoice = node.parent.content[0] === node ? '0' : '1';
-    return nodeToPath(node.parent) + lastChoice;
+    return indexesFromNode(node.parent) + lastChoice;
+}
+
+function nodeFromIndexes(indexes, tree) {
+    let node = tree;
+    for (let index of indexes) {
+        node = node.content[index];
+    }
+    return node;
 }
 
 function isLetter(node) {
@@ -32,7 +40,6 @@ function createConstantNode(constant) {
     return constant < 0 ? makeNode('-', [node]) : node;
 }
 
-
 function parentOperator(node) {
     return node.parent ? node.parent.operator : null;
 }
@@ -43,7 +50,7 @@ function parentParentOperator(node) {
 
 function treeAsText(node) {
     return node.value !== undefined
-        ? '[' + nodeToPath(node) + ']' + node.value
+        ? '[' + indexesFromNode(node) + ']' + node.value
         : node.operator + '(' + node.content.map(c => treeAsText(c)).join() + ')';
 }
 

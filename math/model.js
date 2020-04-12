@@ -9,7 +9,7 @@ const model = {
     mathOperations: {
         subtractTermOnBothSides: {
             steps: ['selectOneTerm'],
-            icon: '|-',
+            icon: '|&minus;',
             description: 'Trekke fra på begge sider av ligningen',
         },            
         moveTermToOtherSide: {
@@ -19,7 +19,7 @@ const model = {
         },            
         mergeTerms: {
             steps:['selectOneTerm', 'selectOneTerm'],
-            icon: '⭨⭩\n•',
+            icon: '∑',//'⭨⭩\n•',
             description: 'Slå sammen ledd',
         },            
         reduceFraction: {
@@ -34,7 +34,7 @@ const model = {
         },            
         primeFactorize: {
             steps:['selectFactor'],
-            icon: '•\n⭩⭨',
+            icon: '□\n⭩⭨\n□×□',
             description: 'Primtallsfaktorisere',
         },            
     },

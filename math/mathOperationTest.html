@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>QUnit Example</title>
+    <link rel="stylesheet" href="https://code.jquery.com/qunit/qunit-2.9.2.css">
+</head>
+
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+    <script src="https://code.jquery.com/qunit/qunit-2.9.2.js"></script>
+    <script src="common.js"></script>
+    <script src="parser.js"></script>
+    <script src="mathOperations.js"></script>
+    <script>
+        function updateView() { }
+
+        QUnit.test("remove node - first in minus", function (assert) {
+            const tree = parseMathText('x=1-2');
+            const rightSide = tree.content[1];
+            removeNode(rightSide.content[0]);
+            const newMathText = toString(tree);
+            assert.equal(newMathText, 'x=-2');
+        });
+
+        QUnit.test("remove node - second in minus", function (assert) {
+            const tree = parseMathText('x=1-2');
+            const rightSide = tree.content[1];
+            removeNode(rightSide.content[1]);
+            const newMathText = toString(tree);
+            assert.equal(newMathText, 'x=1');
+        });
+
+        // plus
+        QUnit.test("merge terms - plus + plus", function (assert) {
+            testMergeTerms('x=1+2', '10', '11', 'x=3', assert);
+        });
+
+        QUnit.test("merge terms - plus + 1. minus ", function (assert) {
+            // =([0]x,-(+([100]1,[101]2),[11]3))
+            testMergeTerms('x=1+2-3', '100', '101', 'x=3-3', assert);
+        });
+
+        QUnit.test("merge terms - plus + 2. minus ", function (assert) {
+            // =([0]x,-(+([100]1,[101]2),[11]3))
+            testMergeTerms('x=1+2-3', '100', '11', 'x=2-2', assert);
+        });
+
+        QUnit.test("merge terms - plus + unary minus ", function (assert) {
+            assert.ok(true);
+        });
+
+        // 1. minus
+        QUnit.test("merge terms - 1. minus + plus", function (assert) {
+            assert.ok(true);
+        });
+
+        QUnit.test("merge terms - 1. minus + 1. minus ", function (assert) {
+            assert.ok(true);
+        });
+
+        QUnit.test("merge terms - 1. minus + 2. minus ", function (assert) {
+            assert.ok(true);
+        });
+
+        QUnit.test("merge terms - 1. minus + unary minus ", function (assert) {
+            assert.ok(true);
+        });
+
+        // 2. minus
+        QUnit.test("merge terms - 2. minus + plus", function (assert) {
+            assert.ok(true);
+        });
+
+        QUnit.test("merge terms - 2. minus + 1. minus ", function (assert) {
+            assert.ok(true);
+        });
+
+        QUnit.test("merge terms - 2. minus + 2. minus ", function (assert) {
+            assert.ok(true);
+        });
+
+        QUnit.test("merge terms - 2. minus + unary minus ", function (assert) {
+            assert.ok(true);
+        });
+
+        // unary minus
+        QUnit.test("merge terms - unary minus + plus", function (assert) {
+            assert.ok(true);
+        });
+
+        QUnit.test("merge terms - unary minus + 1. minus ", function (assert) {
+            assert.ok(true);
+        });
+
+        QUnit.test("merge terms - unary minus + 2. minus ", function (assert) {
+            assert.ok(true);
+        });
+
+        QUnit.test("merge terms - unary minus + unary minus ", function (assert) {
+            assert.ok(true);
+        });
+
+        function testMergeTerms(mathText, term1, term2, expectedMathText, assert) {
+            model = { mathText };
+            mergeTerms(term1, term2);
+            assert.equal(model.mathText, expectedMathText);
+        }
+
+
+    </script>
+</body>
+
+</html>

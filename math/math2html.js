@@ -87,11 +87,3 @@ function createNodeHtml(node, highlight) {
 function showMultiplicationOperator(node) {
     return isLetter(node.content[0]) && isNumber(node.content[1]);
 }
-
-function parentOperator(node) {
-    return node.parent ? node.parent.operator : null;
-}
-
-function parentParentOperator(node) {
-    return node.parent && node.parent.parent ? node.parent.parent.operator : null;
-}

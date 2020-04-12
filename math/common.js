@@ -32,3 +32,18 @@ function createConstantNode(constant) {
     return constant < 0 ? makeNode('-', [node]) : node;
 }
 
+
+function parentOperator(node) {
+    return node.parent ? node.parent.operator : null;
+}
+
+function parentParentOperator(node) {
+    return node.parent && node.parent.parent ? node.parent.parent.operator : null;
+}
+
+function treeAsText(node) {
+    return node.value !== undefined
+        ? '[' + nodeToPath(node) + ']' + node.value
+        : node.operator + '(' + node.content.map(c => treeAsText(c)).join() + ')';
+}
+

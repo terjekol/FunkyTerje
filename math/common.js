@@ -49,8 +49,9 @@ function parentParentOperator(node) {
 }
 
 function treeAsText(node) {
-    return node.value !== undefined
-        ? '[' + indexesFromNode(node) + ']' + node.value
+    const txt = node.value !== undefined
+        ? node.value
         : node.operator + '(' + node.content.map(c => treeAsText(c)).join() + ')';
+    return '[' + indexesFromNode(node) + ']' + txt;
 }
 

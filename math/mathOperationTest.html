@@ -96,7 +96,8 @@
         });
 
         QUnit.test("merge terms - 2. minus + 2. minus ", function (assert) {
-            assert.ok(true);
+            // =([0]x,-(+(-([1000]1,[1001]2),[101]3),[11]5))
+            testMergeTerms('x=1-2+3-5', '1001', '11', 'x=1-7+3', assert);
         });
 
         QUnit.test("merge terms - 2. minus + unary minus ", function (assert) {
@@ -118,6 +119,11 @@
 
         QUnit.test("merge terms - unary minus + unary minus ", function (assert) {
             assert.ok(true);
+        });
+
+        QUnit.test("merge x-terms -  ", function (assert) {
+            // []=([0]x,[1]+([10]*([100]2,[101]x),[11]*([110]3,[111]x)))
+            testMergeTerms('x=2*x+3*x', '10', '11', 'x=5*x', assert);            
         });
 
         function testMergeTerms(mathText, term1, term2, expectedMathText, assert) {

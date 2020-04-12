@@ -55,3 +55,10 @@ function treeAsText(node) {
     return '[' + indexesFromNode(node) + ']' + txt;
 }
 
+function getFirstConstantInProduct(node) {
+    if (isNumber(node)) return node;
+    if (node.operator !== '*') return null;
+    return getFirstConstantInProduct(node.content[0])
+        || getFirstConstantInProduct(node.content[1]);
+}
+

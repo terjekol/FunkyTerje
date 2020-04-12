@@ -116,7 +116,8 @@ function adjustConstant(node, newConstant) {
         return;
     }
     if (node.operator === '*') {
-        adjustConstantInProduct(node, newConstant);
+        const constantNode = getFirstConstantInProduct(node);
+        if (constantNode !== null) constantNode.value = Math.abs(newConstant);
         return;
     }
     if (node.operator === '/') {
@@ -124,16 +125,6 @@ function adjustConstant(node, newConstant) {
         return;
     }
     throw "cannot adjust constant in " + toString(node);
-}
-
-function adjustConstantInProduct(node, newConstant) {
-    if (isNumber(node)) {
-        node.value = Math.abs(newConstant);
-        return true;
-    }
-    if (node.operator !== '*') return false;
-    return adjustConstantInProduct(node.content[0], newConstant)
-        || adjustConstantInProduct(node.content[1], newConstant);
 }
 
 /*
@@ -199,10 +190,12 @@ function extractConstant(node) {
     }
     const isMultiplication = node.operator === '*';
     const product = cloneNode(isMultiplication ? node : node.content[1]);
-    if (!isNumber(product.content[0])) return { constant: 1, theRest: cloneNode(node) };
-    if (isMultiplication) return { constant: product.content[0].value, theRest: product.content[1] };
-    const constant = product.content[0].value;
-    const theRest = makeNode('/', [product.content[1], cloneNode(node.content[0])]);
+    const constantNode = getFirstConstantInProduct(product);
+    if (constantNode === null) return { constant: 1, theRest: cloneNode(node) };
+    const value = constantNode.value * getSignFromParent(node);
+    constantNode.value = 1;
+    if (isMultiplication) return { constant: value, theRest: product.content[1] };
+    const theRest = makeNode('/', [cloneNode(product), cloneNode(node.content[1])]);
     return { constant, theRest };
 }
 

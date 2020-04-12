@@ -28,7 +28,7 @@ function firstParentOperatorOtherThan(operators, node) {
 }
 
 function createConstantNode(constant) {
-    const node = { value: Math.abs(constant) };
+    const node = { value: '' + Math.abs(constant) };
     return constant < 0 ? makeNode('-', [node]) : node;
 }
 

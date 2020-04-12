@@ -86,7 +86,8 @@ function mergeTerms(indexes1, indexes2) {
     if (!bothRestsAreNull && (oneOrBothRestsIsNull || !nodesAreEqual(extraction1.theRest, extraction2.theRest))) {
         return finishWithError('Leddene kan ikke slås sammen.');
     }
-    const newSum = extraction1.constant + extraction2.constant;
+    const newSum = parseInt(extraction1.constant)
+        + parseInt(extraction2.constant);
     if (bothRestsAreNull) {
         replaceNode(selectedNode2, createConstantNode(newSum));
     } else if (newSum === 1) {
@@ -94,10 +95,10 @@ function mergeTerms(indexes1, indexes2) {
     } else if (newSum === 0) {
         removeNode(selectedNode1);
     } else if (newSum < 0) {
-        const negativConstantUnary = makeNode('-', [{ value: -1 * newSum }]);
-        replaceNode(selectedNode1, makeNode('*', negativConstantUnary, extraction1.theRest));
+        const negativConstantUnary = makeNode('-', [createConstantNode(-1 * newSum)]);
+        replaceNode(selectedNode1, makeNode('*', [negativConstantUnary, extraction1.theRest]));
     } else {
-        replaceNode(selectedNode1, makeNode('*', [{ value: newSum }], extraction1.theRest));
+        replaceNode(selectedNode1, makeNode('*', [createConstantNode(newSum), extraction1.theRest]));
     }
 
     removeNode(selectedNode2);

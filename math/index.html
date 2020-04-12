@@ -70,10 +70,10 @@
         function updateView() {
 
             document.getElementById('app').innerHTML = `
-                <div id="menuBar">${createMenuHtml(model.mathOperations)}</div>
-                <div id="text" class="txt">${getText()}</div>
                 <div style="color:red">${model.errorMessage || ''}</div>
                 <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
+                <div id="menuBar">${createMenuHtml(model.mathOperations)}</div>
+                <div id="text" class="txt">${getText()}</div>
             `;
         }
 

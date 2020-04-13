@@ -78,14 +78,15 @@ function mergeTerms(indexes1, indexes2) {
     if (!isTopLevelTerm(selectedNode1) || !isTopLevelTerm(selectedNode2)) {
         return finishWithError('Kan bare slå sammen ledd som er på toppnivå på høyre eller venstre side av ligningen.');
     }
-    const typeTerm1 = getType(selectedNode1);
-    const typeTerm2 = getType(selectedNode2);
+    const node1 = isUnaryMinus(selectedNode1) ? selectedNode1.content[0] : selectedNode1;
+    const node2 = isUnaryMinus(selectedNode2) ? selectedNode2.content[0] : selectedNode2;
+    const typeTerm1 = getType(node1);
+    const typeTerm2 = getType(node2);
 
     if (typeTerm1 === 'constant') {
         if (typeTerm2 !== 'constant') return finishWithError('Konstantledd kan bare slås sammen med andre konstantledd.');
         mergeConstantAndConstant(selectedNode1, selectedNode2);
     } else if (typeTerm1 === 'letter') {
-    } else if (typeTerm1 === 'unary minus') {
     } else if (typeTerm1 === 'product') {
     } else if (typeTerm1 === 'division') {
     }
@@ -173,7 +174,7 @@ function adjustConstant(node, newConstant) {
         if (constantNode !== null) constantNode.value = Math.abs(newConstant);
         return;
     }
-    if (node.operator === '/') {
+    if (node.operator === '/' || isUnaryMinus(node)) {
         adjustConstant(node.content[0], newConstant);
         return;
     }

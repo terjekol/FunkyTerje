@@ -151,30 +151,13 @@ function extractConstant(node) {
 }
 
 function getCombinedSignOfTopLevelTerm(node) {
-    return parentOperator(node) === '-' ? -1 : 1;
+    if (node.parent.operator === '=') return 1;
+    const factor = node.parent.operator !== '-'
+        || node.parent.content.length === 2 && node.parent.content[0] === node
+        ? 1
+        : -1;
+    return factor * getCombinedSignOfTopLevelTerm(node.parent);
 }
-
-// function extractConstant(node) {
-//     if (isNumber(node)) return { constant: node.value * getSignFromParent(node), theRest: null };
-//     if (isLetter(node)) return { constant: getSignFromParent(node), theRest: { value: node.value } };
-//     if (isUnaryMinus(node)) {
-//         const constantAndTheRest = extractConstant(node.content[0]);
-//         constantAndTheRest.constant *= -1;
-//         return constantAndTheRest;
-//     }
-//     if (!'*/'.includes(node.operator)) {
-//         console.error('unexpected operator: ' + node.operator, node);
-//     }
-//     const isMultiplication = node.operator === '*';
-//     const product = cloneNode(isMultiplication ? node : node.content[1]);
-//     const constantNode = getFirstConstantInProduct(product);
-//     if (constantNode === null) return { constant: 1, theRest: cloneNode(node) };
-//     const value = constantNode.value * getSignFromParent(node);
-//     constantNode.value = 1;
-//     if (isMultiplication) return { constant: value, theRest: product.content[1] };
-//     const theRest = makeNode('/', [cloneNode(product), cloneNode(node.content[1])]);
-//     return { constant, theRest };
-// }
 
 function getSignFromParent(node) {
     return isSecondPartOfMinus(node) ? -1 : 1;

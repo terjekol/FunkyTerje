@@ -8,7 +8,7 @@ QUnit.test("merge terms - plus + 1. minus ", function (assert) {
     testMergeTerms('x=1+2-3', '100', '101', 'x=3-3', assert);
 });
 
-QUnit.test("merge terms - plus + 2. minus ", function (assert) {
+QUnit.test("merge terms - plus + 2. minus - x=1+2-3", function (assert) {
     // =([0]x,-(+([100]1,[101]2),[11]3))
     testMergeTerms('x=1+2-3', '100', '11', 'x=2-2', assert);
 });
@@ -36,7 +36,8 @@ QUnit.test("merge terms - 1. minus + 2. minus ", function (assert) {
 });
 
 QUnit.test("merge terms - 1. minus + unary minus ", function (assert) {
-    assert.ok(true);
+    // []=([0]x,[1]+([10]-([100]1,[101]2),[11]-([110]3)))
+    testMergeTerms('x=1-2+(-3)', '100', '11', 'x=-2+(-2)', assert);
 });
 
 // 2. minus
@@ -76,25 +77,25 @@ QUnit.test("merge terms - unary minus + unary minus ", function (assert) {
     assert.ok(true);
 });
 
-QUnit.test("merge x-terms - x=2*x+3*x ", function (assert) {
-    // []=([0]x,[1]+([10]*([100]2,[101]x),[11]*([110]3,[111]x)))
-    testMergeTerms('x=2*x+3*x', '10', '11', 'x=5*x', assert);
-});
+// QUnit.test("merge x-terms - x=2*x+3*x ", function (assert) {
+//     // []=([0]x,[1]+([10]*([100]2,[101]x),[11]*([110]3,[111]x)))
+//     testMergeTerms('x=2*x+3*x', '10', '11', 'x=5*x', assert);
+// });
 
-QUnit.test("merge x-terms - x=5*x-3*x ", function (assert) {
-    // []=([0]x,[1]+([10]*([100]2,[101]x),[11]*([110]3,[111]x)))
-    testMergeTerms('x=5*x-3*x', '10', '11', 'x=2*x', assert);
-});
+// QUnit.test("merge x-terms - x=5*x-3*x ", function (assert) {
+//     // []=([0]x,[1]+([10]*([100]2,[101]x),[11]*([110]3,[111]x)))
+//     testMergeTerms('x=5*x-3*x', '10', '11', 'x=2*x', assert);
+// });
 
-QUnit.test("merge x-terms - x=3*x-5*x ", function (assert) {
-    // []=([0]x,[1]+([10]*([100]2,[101]x),[11]*([110]3,[111]x)))
-    testMergeTerms('x=3*x-5*x', '10', '11', 'x=-2*x', assert);
-});
+// QUnit.test("merge x-terms - x=3*x-5*x ", function (assert) {
+//     // []=([0]x,[1]+([10]*([100]2,[101]x),[11]*([110]3,[111]x)))
+//     testMergeTerms('x=3*x-5*x', '10', '11', 'x=-2*x', assert);
+// });
 
-QUnit.test("merge x-terms - x=-3*x+5*x ", function (assert) {
-    // []=([0]x,[1]+([10]*([100]-([1000]3),[101]x),[11]*([110]5,[111]x)))
-    testMergeTerms('x=-3*x+5*x', '10', '11', 'x=2*x', assert);
-});
+// QUnit.test("merge x-terms - x=-3*x+5*x ", function (assert) {
+//     // []=([0]x,[1]+([10]*([100]-([1000]3),[101]x),[11]*([110]5,[111]x)))
+//     testMergeTerms('x=-3*x+5*x', '10', '11', 'x=2*x', assert);
+// });
 
 function testMergeTerms(mathText, term1, term2, expectedMathText, assert) {
     model = { mathText };

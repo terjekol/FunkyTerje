@@ -78,36 +78,89 @@ function mergeTerms(indexes1, indexes2) {
     if (!isTopLevelTerm(selectedNode1) || !isTopLevelTerm(selectedNode2)) {
         return finishWithError('Kan bare slå sammen ledd som er på toppnivå på høyre eller venstre side av ligningen.');
     }
-    const extraction1 = extractConstant(selectedNode1);
-    const extraction2 = extractConstant(selectedNode2);
+    const typeTerm1 = getType(selectedNode1);
+    const typeTerm2 = getType(selectedNode2);
 
-    const oneOrBothRestsIsNull = extraction1.theRest === null || extraction2.theRest === null;
-    const bothRestsAreNull = extraction1.theRest === null && extraction2.theRest === null;
-    if (!bothRestsAreNull && (oneOrBothRestsIsNull || !nodesAreEqual(extraction1.theRest, extraction2.theRest))) {
-        return finishWithError('Leddene kan ikke slås sammen.');
+    if (typeTerm1 === 'constant') {
+        if (typeTerm2 !== 'constant') return finishWithError('Konstantledd kan bare slås sammen med andre konstantledd.');
+        mergeConstantAndConstant(selectedNode1, selectedNode2);
+    } else if (typeTerm1 === 'letter') {
+    } else if (typeTerm1 === 'unary minus') {
+    } else if (typeTerm1 === 'product') {
+    } else if (typeTerm1 === 'division') {
     }
-    const newSum = parseInt(extraction1.constant) + parseInt(extraction2.constant);
-    const isPositive1 = extraction1.constant > 0;
-    const isPositive2 = extraction2.constant > 0;
+
+
+    // const extraction1 = extractConstant(selectedNode1);
+    // const extraction2 = extractConstant(selectedNode2);
+
+    // const oneOrBothRestsIsNull = extraction1.theRest === null || extraction2.theRest === null;
+    // const bothRestsAreNull = extraction1.theRest === null && extraction2.theRest === null;
+    // if (!bothRestsAreNull && (oneOrBothRestsIsNull || !nodesAreEqual(extraction1.theRest, extraction2.theRest))) {
+    //     return finishWithError('Leddene kan ikke slås sammen.');
+    // }
+    // const newSum = parseInt(extraction1.constant) + parseInt(extraction2.constant);
+    // const isPositive1 = extraction1.constant > 0;
+    // const isPositive2 = extraction2.constant > 0;
+    // if (newSum === 0) {
+    //     removeNode(selectedNode1);
+    //     removeNode(selectedNode2);
+    // } else if (isPositive1 === isPositive2) {
+    //     adjustConstant(selectedNode1, newSum);
+    //     removeNode(selectedNode2);
+    // } else {
+    //     const positiveNode = isPositive1 ? selectedNode1 : selectedNode2;
+    //     const negativeNode = isPositive1 ? selectedNode2 : selectedNode1;
+    //     if (newSum > 0) {
+    //         adjustConstant(positiveNode, newSum);
+    //         removeNode(negativeNode);
+    //     } else {
+    //         adjustConstant(negativeNode, newSum);
+    //         removeNode(positiveNode);
+    //     }
+    // }
+    model.mathText = toString(tree);
+    resetAndUpdateView();
+}
+
+function mergeConstantAndConstant(selectedNode1, selectedNode2) {
+    const constant1 = parseInt(selectedNode1.value) * getCombinedSignOfTopLevelTerm(selectedNode1);
+    const constant2 = parseInt(selectedNode2.value) * getCombinedSignOfTopLevelTerm(selectedNode2);
+    const newSum = constant1 + constant2;
+    const isPositive1 = constant1 > 0;
+    const isPositive2 = constant2 > 0;
     if (newSum === 0) {
         removeNode(selectedNode1);
         removeNode(selectedNode2);
-    } else if (isPositive1 === isPositive2) {
+    }
+    else if (isPositive1 === isPositive2) {
         adjustConstant(selectedNode1, newSum);
         removeNode(selectedNode2);
-    } else {
+    }
+    else {
         const positiveNode = isPositive1 ? selectedNode1 : selectedNode2;
         const negativeNode = isPositive1 ? selectedNode2 : selectedNode1;
         if (newSum > 0) {
             adjustConstant(positiveNode, newSum);
             removeNode(negativeNode);
-        } else {
+        }
+        else {
             adjustConstant(negativeNode, newSum);
             removeNode(positiveNode);
         }
     }
-    model.mathText = toString(tree);
-    resetAndUpdateView();
+}
+
+function getType(node) {
+    if (node.value !== undefined) {
+        if (isNumber(node)) return 'constant';
+        if (isLetter(node)) return 'letter';
+        throw "unknown type: " + toString(node);
+    }
+    if (isUnaryMinus(node)) return 'unary minus';
+    if (isMultiplication(node)) return 'product';
+    if (isDivision(node)) return 'division';
+    throw "unknown type: " + toString(node);
 }
 
 function adjustConstant(node, newConstant) {
@@ -134,26 +187,36 @@ function finishWithError(errorMessage) {
 }
 
 function extractConstant(node) {
+    if (isLetter(node)) return { constant: 1 * getCombinedSignOfTopLevelTerm(node), theRest: node };
     if (isNumber(node)) return { constant: node.value * getCombinedSignOfTopLevelTerm(node), theRest: null };
-    if (isUnaryMinus(node)) {
-        return extractConstant(node.content[0]);
-    }
+    if (isUnaryMinus(node)) return extractConstant(node.content[0]);
     if (isMultiplication(node)) {
-        const factor1extraction = extractConstant(node.content[0]);
-        const isFactor1 = factor1extraction !== null;
-        const factorExtraction = isFactor1 ? factor1extraction : extractConstant(node.content[1]);
-        if (factorExtraction === null) return null;
-        const constant = factorExtraction.constant * getCombinedSignOfTopLevelTerm(node);
-        const theRest = node.content[isFactor1 ? 1 : 0];
-        return { constant, theRest };
+        const product = cloneNode(node);
+        const wrapperEquation = createWrapperEquation(product);
+        const factor = getFirstFactorInProduct(product);
+        const extraction = extractConstant(factor);
+        if (extraction === null) return null;
+        return { constant: extraction.constant, theRest: node };
     }
     return null;
+}
+
+function createWrapperEquation(node) {
+    const equation = makeNode('=', [{ value: 1 }, node]);
+    addParentAndId(equation);
+    return equation;
+}
+
+function getFirstFactorInProduct(product) {
+    return isMultiplication(product.content[0])
+        ? getFirstFactorInProduct(product.content[0])
+        : product.content[0];
 }
 
 function getCombinedSignOfTopLevelTerm(node) {
     if (node.parent.operator === '=') return 1;
     const factor = node.parent.operator !== '-'
-        || node.parent.content.length === 2 && node.parent.content[0] === node
+        || (node.parent.content.length === 2 && node.parent.content[0] === node)
         ? 1
         : -1;
     return factor * getCombinedSignOfTopLevelTerm(node.parent);

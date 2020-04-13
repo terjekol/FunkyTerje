@@ -1,4 +1,4 @@
-
+/*
 QUnit.test("extract positive constant x=1+2", function (assert) {
     // =([0]x,+([10]1,[11]2))
     const tree = parseMathText('x=1+2');
@@ -98,3 +98,4 @@ QUnit.test("extract 1. in minus", function (assert) {
     assert.equal(extraction.constant, '1');
     assert.equal(extraction.theRest, null);
 });
+*/

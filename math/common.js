@@ -24,6 +24,14 @@ function isUnaryMinus(node) {
     return node.operator === '-' && node.content.length === 1;
 }
 
+function isMultiplication(node) {
+    return node.operator === '*';
+}
+
+function isDivision(node) {
+    return node.operator === '/';
+}
+
 function isTopLevelTerm(node) {
     if ('=+-'.includes(node.operator) && node.content.length === 2) return false;
     return firstParentOperatorOtherThan('+-', node) === '=';
@@ -55,10 +63,12 @@ function treeAsText(node) {
     return '[' + indexesFromNode(node) + ']' + txt;
 }
 
-function getFirstConstantInProduct(node) {
-    if (isNumber(node)) return node;
-    if (node.operator !== '*') return null;
-    return getFirstConstantInProduct(node.content[0])
-        || getFirstConstantInProduct(node.content[1]);
-}
+// function getFirstConstantInProduct(node) {
+//     if (isNumber(node)) return node;
+//     if (isUnaryMinus(node) && isNumber(node.content[0])) return -1 * parseInt(node.content[0]);
+//     if (node.operator !== '*') return null;
+//     const first = getFirstConstantInProduct(node.content[0]);
+//     if (first !== null) return first;
+//     getFirstConstantInProduct(node.content[1]);
+// }
 

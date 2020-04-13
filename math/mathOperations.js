@@ -127,50 +127,6 @@ function adjustConstant(node, newConstant) {
     throw "cannot adjust constant in " + toString(node);
 }
 
-/*
-function mergeTerms(indexes1, indexes2) {
-    const tree = parseMathText(model.mathText);
-    const selectedNode1 = nodeFromIndexes(indexes1, tree);
-    const selectedNode2 = nodeFromIndexes(indexes2, tree);
-    if (nodesAreOnSeparateSides(selectedNode1, selectedNode2, tree)) {
-        return finishWithError('Kan bare slå sammen ledd som er på samme side av ligningen.');
-    }
-    if (!isTopLevelTerm(selectedNode1) || !isTopLevelTerm(selectedNode2)) {
-        return finishWithError('Kan bare slå sammen ledd som er på toppnivå på høyre eller venstre side av ligningen.');
-    }
-    const extraction1 = extractConstant(selectedNode1);
-    const extraction2 = extractConstant(selectedNode2);
-
-    const oneOrBothRestsIsNull = extraction1.theRest === null || extraction2.theRest === null;
-    const bothRestsAreNull = extraction1.theRest === null && extraction2.theRest === null;
-    if (!bothRestsAreNull && (oneOrBothRestsIsNull || !nodesAreEqual(extraction1.theRest, extraction2.theRest))) {
-        return finishWithError('Leddene kan ikke slås sammen.');
-    }
-    const newSum = parseInt(extraction1.constant) + parseInt(extraction2.constant);
-    if (bothRestsAreNull) {
-        const isFirstPositiveAndSecondNegative = extraction1.constant > 0 && extraction2.constant < 0;
-        const nodeA = isFirstPositiveAndSecondNegative ? selectedNode2 : selectedNode1;
-        const nodeB = nodeA === selectedNode1 ? selectedNode2 : selectedNode1;
-        nodeA.value = Math.abs(newSum);
-        removeNode(nodeB);
-    } else {
-        if (newSum === 1) {
-            replaceNode(selectedNode1, extraction1.theRest);
-        } else if (newSum === 0) {
-            removeNode(selectedNode1);
-        } else if (newSum < 0) {
-            const negativConstantUnary = makeNode('-', [createConstantNode(-1 * newSum)]);
-            replaceNode(selectedNode1, makeNode('*', [negativConstantUnary, extraction1.theRest]));
-        } else {
-            replaceNode(selectedNode1, makeNode('*', [createConstantNode(newSum), extraction1.theRest]));
-        }
-        removeNode(selectedNode2);
-    }
-    model.mathText = toString(tree);
-    resetAndUpdateView();
-}
-*/
-
 function finishWithError(errorMessage) {
     model.errorMessage = errorMessage;
     resetAndUpdateView();
@@ -178,26 +134,47 @@ function finishWithError(errorMessage) {
 }
 
 function extractConstant(node) {
-    if (isNumber(node)) return { constant: node.value * getSignFromParent(node), theRest: null };
-    if (isLetter(node)) return { constant: getSignFromParent(node), theRest: { value: node.value } };
+    if (isNumber(node)) return { constant: node.value * getCombinedSignOfTopLevelTerm(node), theRest: null };
     if (isUnaryMinus(node)) {
-        const constantAndTheRest = extractConstant(node.content[0]);
-        constantAndTheRest.constant *= -1;
-        return constantAndTheRest;
+        return extractConstant(node.content[0]);
     }
-    if (!'*/'.includes(node.operator)) {
-        console.error('unexpected operator: ' + node.operator, node);
+    if (isMultiplication(node)) {
+        const factor1extraction = extractConstant(node.content[0]);
+        const isFactor1 = factor1extraction !== null;
+        const factorExtraction = isFactor1 ? factor1extraction : extractConstant(node.content[1]);
+        if (factorExtraction === null) return null;
+        const constant = factorExtraction.constant * getCombinedSignOfTopLevelTerm(node);
+        const theRest = node.content[isFactor1 ? 1 : 0];
+        return { constant, theRest };
     }
-    const isMultiplication = node.operator === '*';
-    const product = cloneNode(isMultiplication ? node : node.content[1]);
-    const constantNode = getFirstConstantInProduct(product);
-    if (constantNode === null) return { constant: 1, theRest: cloneNode(node) };
-    const value = constantNode.value * getSignFromParent(node);
-    constantNode.value = 1;
-    if (isMultiplication) return { constant: value, theRest: product.content[1] };
-    const theRest = makeNode('/', [cloneNode(product), cloneNode(node.content[1])]);
-    return { constant, theRest };
+    return null;
 }
+
+function getCombinedSignOfTopLevelTerm(node) {
+    return parentOperator(node) === '-' ? -1 : 1;
+}
+
+// function extractConstant(node) {
+//     if (isNumber(node)) return { constant: node.value * getSignFromParent(node), theRest: null };
+//     if (isLetter(node)) return { constant: getSignFromParent(node), theRest: { value: node.value } };
+//     if (isUnaryMinus(node)) {
+//         const constantAndTheRest = extractConstant(node.content[0]);
+//         constantAndTheRest.constant *= -1;
+//         return constantAndTheRest;
+//     }
+//     if (!'*/'.includes(node.operator)) {
+//         console.error('unexpected operator: ' + node.operator, node);
+//     }
+//     const isMultiplication = node.operator === '*';
+//     const product = cloneNode(isMultiplication ? node : node.content[1]);
+//     const constantNode = getFirstConstantInProduct(product);
+//     if (constantNode === null) return { constant: 1, theRest: cloneNode(node) };
+//     const value = constantNode.value * getSignFromParent(node);
+//     constantNode.value = 1;
+//     if (isMultiplication) return { constant: value, theRest: product.content[1] };
+//     const theRest = makeNode('/', [cloneNode(product), cloneNode(node.content[1])]);
+//     return { constant, theRest };
+// }
 
 function getSignFromParent(node) {
     return isSecondPartOfMinus(node) ? -1 : 1;

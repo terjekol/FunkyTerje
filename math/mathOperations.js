@@ -91,37 +91,21 @@ function mergeTerms(indexes1, indexes2) {
     } else if (typeTerm1 === 'division') {
     }
 
-
-    // const extraction1 = extractConstant(selectedNode1);
-    // const extraction2 = extractConstant(selectedNode2);
-
-    // const oneOrBothRestsIsNull = extraction1.theRest === null || extraction2.theRest === null;
-    // const bothRestsAreNull = extraction1.theRest === null && extraction2.theRest === null;
-    // if (!bothRestsAreNull && (oneOrBothRestsIsNull || !nodesAreEqual(extraction1.theRest, extraction2.theRest))) {
-    //     return finishWithError('Leddene kan ikke slås sammen.');
-    // }
-    // const newSum = parseInt(extraction1.constant) + parseInt(extraction2.constant);
-    // const isPositive1 = extraction1.constant > 0;
-    // const isPositive2 = extraction2.constant > 0;
-    // if (newSum === 0) {
-    //     removeNode(selectedNode1);
-    //     removeNode(selectedNode2);
-    // } else if (isPositive1 === isPositive2) {
-    //     adjustConstant(selectedNode1, newSum);
-    //     removeNode(selectedNode2);
-    // } else {
-    //     const positiveNode = isPositive1 ? selectedNode1 : selectedNode2;
-    //     const negativeNode = isPositive1 ? selectedNode2 : selectedNode1;
-    //     if (newSum > 0) {
-    //         adjustConstant(positiveNode, newSum);
-    //         removeNode(negativeNode);
-    //     } else {
-    //         adjustConstant(negativeNode, newSum);
-    //         removeNode(positiveNode);
-    //     }
-    // }
+    removeUnariesInUnaries(tree);
     model.mathText = toString(tree);
     resetAndUpdateView();
+}
+
+function removeUnariesInUnaries(node) {
+    if (isUnaryMinus(node) && isUnaryMinus(node.content[0])) {
+        const newNode = node.content[0].content[0];
+        replaceNode(node, newNode);
+        removeUnariesInUnaries(newNode);
+        return;
+    }
+    if (node.value !== undefined) return;
+    removeUnariesInUnaries(node.content[0]);
+    removeUnariesInUnaries(node.content[1]);
 }
 
 function mergeConstantAndConstant(selectedNode1, selectedNode2) {
@@ -185,21 +169,6 @@ function finishWithError(errorMessage) {
     model.errorMessage = errorMessage;
     resetAndUpdateView();
     return 'dummy';
-}
-
-function extractConstant(node) {
-    if (isLetter(node)) return { constant: 1 * getCombinedSignOfTopLevelTerm(node), theRest: node };
-    if (isNumber(node)) return { constant: node.value * getCombinedSignOfTopLevelTerm(node), theRest: null };
-    if (isUnaryMinus(node)) return extractConstant(node.content[0]);
-    if (isMultiplication(node)) {
-        const product = cloneNode(node);
-        const wrapperEquation = createWrapperEquation(product);
-        const factor = getFirstFactorInProduct(product);
-        const extraction = extractConstant(factor);
-        if (extraction === null) return null;
-        return { constant: extraction.constant, theRest: node };
-    }
-    return null;
 }
 
 function createWrapperEquation(node) {
@@ -267,6 +236,7 @@ function siblingNode(node) {
 
 function replaceNode(node, newNode) {
     node.parent.content[indexWithParent(node)] = newNode;
+    newNode.parent = node.parent;
 }
 
 function otherIndex(index) {

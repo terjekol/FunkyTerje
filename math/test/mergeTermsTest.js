@@ -73,11 +73,13 @@ QUnit.test("merge terms - unary minus + 1. minus ", function (assert) {
 });
 
 QUnit.test("merge terms - unary minus + 2. minus ", function (assert) {
-    assert.ok(true);
+    // []=([0]x,[1]-([10]+([100]-([1000]1),[101]7),[11]3))
+    testMergeTerms('x=-1+7-3', '100', '11', 'x=-4+7', assert);
 });
 
 QUnit.test("merge terms - unary minus + unary minus ", function (assert) {
-    assert.ok(true);
+    // []=([0]x,[1]-([10]-([100]1),[11]-([110]2)))
+    testMergeTerms('x=-1-(-2)', '10', '11', 'x=1', assert);
 });
 
 // QUnit.test("merge x-terms - x=2*x+3*x ", function (assert) {

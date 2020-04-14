@@ -166,12 +166,12 @@ function getType(node) {
 
 function adjustConstant(node, newConstant) {
     if (isNumber(node)) {
-        node.value = Math.abs(newConstant);
+        node.value = '' + Math.abs(newConstant);
         return;
     }
     if (node.operator === '*') {
         const constantNode = getFirstConstantInProduct(node);
-        if (constantNode !== null) constantNode.value = Math.abs(newConstant);
+        if (constantNode !== null) constantNode.value = '' + Math.abs(newConstant);
         return;
     }
     if (node.operator === '/' || isUnaryMinus(node)) {
@@ -250,8 +250,10 @@ function nodesAreEqual(node1, node2) {
 
 function removeNode(node) {
     const parent = node.parent;
-    if (parent.operator === '-' && indexWithParent(node) === 0) {
+    if (parent.operator === '-' && parent.content.length === 2 && indexWithParent(node) === 0) {
         parent.content.shift();
+    } else if (isUnaryMinus(node.parent)) {
+        removeNode(node.parent);
     } else {
         replaceNode(parent, siblingNode(node));
     }

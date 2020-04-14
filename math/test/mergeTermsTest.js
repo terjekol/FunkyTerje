@@ -57,7 +57,8 @@ QUnit.test("merge terms - 2. minus + 2. minus ", function (assert) {
 });
 
 QUnit.test("merge terms - 2. minus + unary minus ", function (assert) {
-    assert.ok(true);
+    // []=([0]x,[1]+([10]+([100]-([1000]1,[1001]2),[101]3),[11]-([110]5)))
+    testMergeTerms('x=1-2+3+(-5)', '1001', '11', 'x=1-7+3', assert);
 });
 
 // unary minus

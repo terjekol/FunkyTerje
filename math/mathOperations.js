@@ -97,15 +97,15 @@ function mergeTerms(indexes1, indexes2) {
 }
 
 function removeUnariesInUnaries(node) {
+    if (node.value !== undefined) return;
     if (isUnaryMinus(node) && isUnaryMinus(node.content[0])) {
         const newNode = node.content[0].content[0];
         replaceNode(node, newNode);
         removeUnariesInUnaries(newNode);
         return;
     }
-    if (node.value !== undefined) return;
     removeUnariesInUnaries(node.content[0]);
-    removeUnariesInUnaries(node.content[1]);
+    if (node.content.length === 2) removeUnariesInUnaries(node.content[1]);
 }
 
 function mergeConstantAndConstant(selectedNode1, selectedNode2) {

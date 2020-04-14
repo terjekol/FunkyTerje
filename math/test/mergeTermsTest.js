@@ -11,12 +11,15 @@ QUnit.test("merge terms - plus + 1. minus ", function (assert) {
 QUnit.test("merge terms - plus + 2. minus - x=1+2-3", function (assert) {
     // =([0]x,-(+([100]1,[101]2),[11]3))
     testMergeTerms('x=1+2-3', '100', '11', 'x=2-2', assert);
+    testMergeTerms('x=7+2-3', '100', '11', 'x=4+2', assert);
+    testMergeTerms('x=3+2-3', '100', '11', 'x=2', assert);
 });
 
 QUnit.test("merge terms - plus + unary minus ", function (assert) {
     // =([0]x,-(+([100]1,-([1010]2)),[11]3))
-    //testMergeTerms('x=1+(-2)-3', '100', '1010', 'x=-1-3', assert);
-    assert.ok(true);
+    testMergeTerms('x=1+(-2)-3', '100', '1010', 'x=-1-3', assert);
+    testMergeTerms('x=2+(-2)-3', '100', '1010', 'x=-3', assert);
+    testMergeTerms('x=3+(-2)-3', '100', '1010', 'x=1-3', assert);
 });
 
 // 1. minus

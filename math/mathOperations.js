@@ -85,7 +85,7 @@ function mergeTerms(indexes1, indexes2) {
 
     if (typeTerm1 === 'constant') {
         if (typeTerm2 !== 'constant') return finishWithError('Konstantledd kan bare slås sammen med andre konstantledd.');
-        mergeConstantAndConstant(selectedNode1, selectedNode2);
+        mergeConstantAndConstant(node1, node2);
     } else if (typeTerm1 === 'letter') {
     } else if (typeTerm1 === 'product') {
     } else if (typeTerm1 === 'division') {

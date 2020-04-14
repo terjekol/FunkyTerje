@@ -27,13 +27,23 @@ function parseMathText(mathText) {
 }
 
 function toString(node) {
-    const txt = node.value != undefined ? node.value :
-        node.content.length == 1 ? node.operator + toString(node.content[0]) :
-            toString(node.content[0]) + node.operator + toString(node.content[1]);
-    if ('+-'.includes(node.operator) && !'=+-'.includes(parentOperator(node))) {
-        return '(' + txt + ')';
+    if (node.value != undefined) {
+        return node.value;
     }
-    return txt;
+    if (isUnaryMinus(node)) {
+        if (isFirstTerm(node)) return '-' + toString(node.content[0]);
+        else return '(-' + toString(node.content[0]) + ')';
+    }
+    if (node.operator === '-' && '+-'.includes(node.content[1].operator)) {
+        return toString(node.content[0]) + node.operator + '(' + toString(node.content[1]) + ')';
+    }
+    return toString(node.content[0]) + node.operator + toString(node.content[1]);
+}
+
+function isFirstTerm(node) {
+    const isFirstWithParent = node.parent && node === node.parent.content[0];
+    if (node.parent && '+-'.includes(parentOperator(node))) return isFirstWithParent && isFirstTerm(node.parent);
+    return true;
 }
 
 function addParentAndId(node, parent) {

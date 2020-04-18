@@ -78,10 +78,10 @@ function mergeTerms(indexes1, indexes2) {
     if (!isTopLevelTerm(selectedNode1) || !isTopLevelTerm(selectedNode2)) {
         return finishWithError('Kan bare slå sammen ledd som er på toppnivå på høyre eller venstre side av ligningen.');
     }
-    const node1 = isUnaryMinus(selectedNode1) ? selectedNode1.content[0] : selectedNode1;
-    const node2 = isUnaryMinus(selectedNode2) ? selectedNode2.content[0] : selectedNode2;
-    const typeTerm1 = getType(node1);
-    const typeTerm2 = getType(node2);
+    let node1 = isUnaryMinus(selectedNode1) ? selectedNode1.content[0] : selectedNode1;
+    let node2 = isUnaryMinus(selectedNode2) ? selectedNode2.content[0] : selectedNode2;
+    let typeTerm1 = getType(node1);
+    let typeTerm2 = getType(node2);
     if (typeTerm1 > typeTerm2) [node1, node2, typeTerm1, typeTerm2] = [node2, node1, typeTerm2, typeTerm1];
     if (typeTerm1 === 'constant') {
         if (typeTerm2 !== 'constant') return finishWithError('Konstantledd kan bare slås sammen med andre konstantledd.');
@@ -102,7 +102,7 @@ function mergeTerms(indexes1, indexes2) {
 }
 
 function replaceLetterWithProductOfOne(node) {
-    if (!isLetter(node)) return;
+    if (!isLetter(node)) return node;
     const newNode = makeNode('*', [{ value: '1' }, node]);
     replaceNode(node, newNode);    
     return newNode;

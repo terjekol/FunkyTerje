@@ -193,9 +193,13 @@ function replaceProductsOfOne(node) {
     const value2 = numberOrUnaryMinusNumberValue(node.content[1]);
     const isOneOrMinus1 = Math.abs(value1) === 1;
     const isOneOrMinus2 = Math.abs(value2) === 1;
-    if (isOneOrMinus1 === isOneOrMinus2) return false;
-    replaceNode(node, node.content[isOneOrMinus1 ? 1 : 0]);
-    return true;
+    if (!isOneOrMinus1 && replaceProductsOfOne(node.content[0])) return true;
+    if (!isOneOrMinus2 && replaceProductsOfOne(node.content[1])) return true;
+    if (isOneOrMinus1 || isOneOrMinus2) {
+        replaceNode(node, node.content[isOneOrMinus1 ? 1 : 0]);
+        return true;
+    }
+    return false;
 }
 
 function removeUnariesInUnaries(node) {

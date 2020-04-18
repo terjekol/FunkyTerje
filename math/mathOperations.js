@@ -82,18 +82,43 @@ function mergeTerms(indexes1, indexes2) {
     const node2 = isUnaryMinus(selectedNode2) ? selectedNode2.content[0] : selectedNode2;
     const typeTerm1 = getType(node1);
     const typeTerm2 = getType(node2);
+    if (typeTerm1 > typeTerm2) {
+        [node1, node2] = [node2, node1];
+        [typeTerm1, typeTerm2] = [typeTerm2, typeTerm1];
+    }
 
     if (typeTerm1 === 'constant') {
         if (typeTerm2 !== 'constant') return finishWithError('Konstantledd kan bare slås sammen med andre konstantledd.');
         mergeConstantAndConstant(node1, node2);
     } else if (typeTerm1 === 'letter') {
+        if (typeTerm2 === 'product') {
+        }
     } else if (typeTerm1 === 'product') {
+        if (typeTerm2 !== 'product') return finishWithError('Kan ikke slå sammen disse leddene.');
+        mergeProductAndProduct(node1, node2);
     } else if (typeTerm1 === 'division') {
     }
 
     removeUnariesInUnaries(tree);
     model.mathText = toString(tree);
     resetAndUpdateView();
+}
+
+function mergeProductAndProduct(node1input, node2input) {
+    const node1 = cloneNode(node1input);
+    const node2 = cloneNode(node2input);
+    const wrapper1 = createWrapperEquation(node1);
+    const wrapper2 = createWrapperEquation(node2);
+    const firstFactor1 = getFirstFactorInProduct(node1);
+    const firstFactor2 = getFirstFactorInProduct(node2);
+    if (isNumber(firstFactor1)) removeNode(firstFactor1);
+    if (isNumber(firstFactor2)) removeNode(firstFactor2);
+    if (!nodesAreEqual(wrapper1, wrapper2)) {
+        return finishWithError('Produktledd må være like, bortsett fra ev. første konstantfaktor, for å kunne slås sammen.');
+    }
+    const realFirstFactor = getFirstFactorInProduct(node1input);
+    realFirstFactor.value = parseInt(firstFactor1.value) + parseInt(firstFactor2.value);
+    removeNode(node2input);
 }
 
 function removeUnariesInUnaries(node) {
@@ -212,9 +237,9 @@ function nodesAreEqual(node1, node2) {
     if (equalPrimitives) return true;
     return node1.operator === node2.operator
         && node1.content && node2.content
-        && nodesAreEqual(node1.content[0], node2.content[1])
+        && nodesAreEqual(node1.content[0], node2.content[0])
         && node1.content.length > 1 && node2.content.length > 1
-        && nodesAreEqual(node1.content[0], node2.content[1]);
+        && nodesAreEqual(node1.content[1], node2.content[1]);
 }
 
 function removeNode(node) {

@@ -34,7 +34,8 @@ function toString(node) {
         if (isFirstTerm(node)) return '-' + toString(node.content[0]);
         else return '(-' + toString(node.content[0]) + ')';
     }
-    if (node.operator === '-' && '+-'.includes(node.content[1].operator)) {
+    if (node.operator === '-' && '+-'.includes(node.content[1].operator)
+        || node.operator === '/') {
         return toString(node.content[0]) + node.operator + '(' + toString(node.content[1]) + ')';
     }
     return toString(node.content[0]) + node.operator + toString(node.content[1]);

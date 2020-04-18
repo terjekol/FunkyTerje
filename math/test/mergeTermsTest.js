@@ -130,10 +130,20 @@ QUnit.test("merge x-terms - x=2*x+x", function (assert) {
     testMergeTerms('x=2*x+x', '10', '11', 'x=3*x', assert);
 });
 
-// QUnit.test("merge x-terms - x=x+2*x", function (assert) {
-//     // []=([0]x,[1]+([10]*([100]2,[101]x),[11]x))
-//     testMergeTerms('x=2*x+x', '10', '11', 'x=2*x', assert);
-// });
+QUnit.test("merge x-terms - x=x+2*x", function (assert) {
+    // []=([0]x,[1]+([10]*([100]2,[101]x),[11]x))
+    testMergeTerms('x=2*x+x', '10', '11', 'x=3*x', assert);
+});
+
+QUnit.test("merge x-terms - x=x-2*x", function (assert) {
+    // []=([0]x,[1]-([10]x,[11]*([110]2,[111]x)))
+    testMergeTerms('x=x-2*x', '10', '11', 'x=-x', assert);
+});
+
+QUnit.test("merge x-terms - x=-x-2*x", function (assert) {
+    // []=([0]x,[1]-([10]x,[11]*([110]2,[111]x)))
+    testMergeTerms('x=-x-2*x', '10', '11', 'x=-3*x', assert);
+});
 
 
 function testMergeTerms(mathText, term1, term2, expectedMathText, assert) {

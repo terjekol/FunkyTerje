@@ -113,8 +113,12 @@ function mergeProductAndProduct(node1, node2) {
     // removeNode(node2input);
     const factor1 = getFirstFactorInProduct(node1);
     const factor2 = getFirstFactorInProduct(node2);
-    const constant1 = parseInt(factor1.value) * getCombinedSignOfTopLevelTerm(node1);
-    const constant2 = parseInt(factor2.value) * getCombinedSignOfTopLevelTerm(node2);
+    const value1 = numberOrUnaryMinusNumberValue(factor1);
+    const value2 = numberOrUnaryMinusNumberValue(factor2);
+    // if (value1 === null) return; else removeNode(firstFactor1);
+    // if (value2 === null) return; else removeNode(firstFactor2);
+    const constant1 = value1 * getCombinedSignOfTopLevelTerm(node1);
+    const constant2 = value2 * getCombinedSignOfTopLevelTerm(node2);
     const newSum = constant1 + constant2;
     const isPositive1 = constant1 > 0;
     const isPositive2 = constant2 > 0;
@@ -147,9 +151,17 @@ function productsExceptFromFirstConstantsAreEqual(node1input, node1input) {
     const wrapper2 = createWrapperEquation(node2);
     const firstFactor1 = getFirstFactorInProduct(node1);
     const firstFactor2 = getFirstFactorInProduct(node2);
-    if (isNumber(firstFactor1)) removeNode(firstFactor1);
-    if (isNumber(firstFactor2)) removeNode(firstFactor2);
+    const value1 = numberOrUnaryMinusNumberValue(firstFactor1);
+    const value2 = numberOrUnaryMinusNumberValue(firstFactor2);
+    if (value1 === null) return; else removeNode(firstFactor1);
+    if (value2 === null) return; else removeNode(firstFactor2);
     return nodesAreEqual(wrapper1, wrapper2);
+}
+
+function numberOrUnaryMinusNumberValue(node) {
+    if (isNumber(node)) return parseInt(node.value);
+    if (isUnaryMinus(node) && isNumber(node.content[0])) return -1 * parseInt(node.content[0].value);
+    return null;
 }
 
 function removeUnariesInUnaries(node) {

@@ -111,26 +111,30 @@ function mergeProductAndProduct(node1, node2) {
     // const realFirstFactor = getFirstFactorInProduct(node1input);
     // realFirstFactor.value = parseInt(firstFactor1.value) + parseInt(firstFactor2.value);
     // removeNode(node2input);
-    const constant1 = parseInt(selectedNode1.value) * getCombinedSignOfTopLevelTerm(selectedNode1);
-    const constant2 = parseInt(selectedNode2.value) * getCombinedSignOfTopLevelTerm(selectedNode2);
+    const factor1 = getFirstFactorInProduct(node1);
+    const factor2 = getFirstFactorInProduct(node2);
+    const constant1 = parseInt(factor1.value) * getCombinedSignOfTopLevelTerm(node1);
+    const constant2 = parseInt(factor2.value) * getCombinedSignOfTopLevelTerm(node2);
     const newSum = constant1 + constant2;
     const isPositive1 = constant1 > 0;
     const isPositive2 = constant2 > 0;
     if (newSum === 0) {
-        removeNode(selectedNode1);
-        removeNode(selectedNode2);
+        removeNode(node1);
+        removeNode(node2);
     } else if (isPositive1 === isPositive2) {
-        adjustConstant(selectedNode1, newSum);
-        removeNode(selectedNode2);
+        adjustConstant(factor1, newSum);
+        removeNode(node2);
     } else {
-        const positiveNode = isPositive1 ? selectedNode1 : selectedNode2;
-        const negativeNode = isPositive1 ? selectedNode2 : selectedNode1;
+        const positiveNode = isPositive1 ? node1 : node2;
+        const negativeNode = isPositive1 ? node2 : node1;
+        const positiveFactor = isPositive1 ? factor1 : factor2;
+        const negativeFactor = isPositive1 ? factor2 : factor1;
         if (newSum > 0) {
-            adjustConstant(positiveNode, newSum);
+            adjustConstant(positiveFactor, newSum);
             removeNode(negativeNode);
         }
         else {
-            adjustConstant(negativeNode, newSum);
+            adjustConstant(negativeFactor, newSum);
             removeNode(positiveNode);
         }
     }

@@ -21,7 +21,9 @@ function createHtml(node, highlight, showOperator) {
     const cssClass = isActive ? 'highlight' : '';
     const onclick = isActive ? `onclick="doMath('${indexesFromNode(node)}')"` : '';
     const operatorHtml = showOperator ? `<div>${node.parent.operator.trim()}</div>` : '';
-    const includeOperatorInSameHtml = node.operator !== '=';
+    const includeOperatorInSameHtml = 
+        node.operator !== '='  
+        && model.onGoingMathOperation && model.onGoingMathOperation.step == 'selectOneTerm';
     const contentHtml = isLeaf ? `<div>${node.value.trim()}</div>` : createNodeHtml(node, highlight);
     return includeOperatorInSameHtml
         ? `<div class="flex ${cssClass}" ${onclick}>${operatorHtml}${contentHtml}</div>`
@@ -40,7 +42,7 @@ function nodeToString(node) {
 
 function getIsActive(highlight, node) {
     return highlight === 'selectOneTerm' && isTopLevelTerm(node)
-        || highlight === 'selectFactor' && isFactor(node)
+        || highlight === 'selectNumber' && isNumber(node)
         || highlight === 'selectFactorInNumerator' && isNumerator(node)
         || highlight === 'selectFactorInDenominator' && isDenominator(node);
 }

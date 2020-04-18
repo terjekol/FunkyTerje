@@ -5,6 +5,7 @@ const model = {
         selectFactorInNumerator: 'velg en faktor i telleren',
         selectFactorInDenominator: 'velg en faktor i nevneren',
         selectFactor: 'velg en faktor',
+        selectNumber: 'velg et tall',
     },
     mathOperations: {
         subtractTermOnBothSides: {
@@ -33,7 +34,7 @@ const model = {
             description: 'Dele begge sider av ligningen',
         },            
         primeFactorize: {
-            steps:['selectFactor'],
+            steps:['selectNumber'],
             icon: '□\n⭩⭨\n□×□',
             description: 'Primtallsfaktorisere',
         },            

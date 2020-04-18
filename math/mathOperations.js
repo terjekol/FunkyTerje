@@ -96,7 +96,7 @@ function mergeTerms(indexes1, indexes2) {
         mergeProductAndProduct(node1, node2);
     } else if (typeTerm1 === 'division') {
     }
-    removeUnariesInUnaries(tree);
+    doSimplifications(tree);
     model.mathText = toString(tree);
     resetAndUpdateView();
 }
@@ -104,7 +104,7 @@ function mergeTerms(indexes1, indexes2) {
 function replaceLetterWithProductOfOne(node) {
     if (!isLetter(node)) return node;
     const newNode = makeNode('*', [{ value: '1' }, node]);
-    replaceNode(node, newNode);    
+    replaceNode(node, newNode);
     return newNode;
 }
 
@@ -166,6 +166,27 @@ function numberOrUnaryMinusNumberValue(node) {
     if (isNumber(node)) return parseInt(node.value);
     if (isUnaryMinus(node) && isNumber(node.content[0])) return -1 * parseInt(node.content[0].value);
     return null;
+}
+
+function doSimplifications(node) {
+    while (replaceProductsOfOne(node));
+    removeUnariesInUnaries(node);
+}
+
+function replaceProductsOfOne(node) {
+    if (node.value !== undefined) return false;
+    if (node.operator !== '*') {
+        if (replaceProductsOfOne(node.content[0])) return true;
+        if (node.content.length > 1 && replaceProductsOfOne(node.content[1])) return true;
+        return false;
+    }
+    const value1 = numberOrUnaryMinusNumberValue(node.content[0]);
+    const value2 = numberOrUnaryMinusNumberValue(node.content[1]);
+    const isOneOrMinus1 = Math.abs(value1) === 1;
+    const isOneOrMinus2 = Math.abs(value2) === 1;
+    if (isOneOrMinus1 === isOneOrMinus2) return false;
+    replaceNode(node, node.content[isOneOrMinus1 ? 1 : 0]);
+    return true;
 }
 
 function removeUnariesInUnaries(node) {

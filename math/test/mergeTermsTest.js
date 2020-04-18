@@ -145,6 +145,19 @@ QUnit.test("merge x-terms - x=-x-2*x", function (assert) {
     testMergeTerms('x=-x-2*x', '10', '11', 'x=-3*x', assert);
 });
 
+QUnit.test("merge x-terms - x=a*b+2*a*b", function (assert) {
+    // []=([0]x,[1]+([10]*([100]a,[101]b),[11]*([110]*([1100]2,[1101]a),[111]b)))"
+    testMergeTerms('x=a*b+2*a*b', '10', '11', 'x=3*a*b', assert);
+});
+
+QUnit.test("merge x-terms - x=a*b+2*a*b", function (assert) {
+    testMergeTerms('x=2*a*b-a*b', '10', '11', 'x=a*b', assert);
+});
+
+QUnit.test("merge x-terms - x=3*a*b+2*a*b", function (assert) {
+    testMergeTerms('x=3*a*b+2*a*b', '10', '11', 'x=5*a*b', assert);
+});
+
 
 function testMergeTerms(mathText, term1, term2, expectedMathText, assert) {
     model = { mathText };

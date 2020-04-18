@@ -38,9 +38,24 @@ function doMath(arg) {
     } else if (operation.name === 'reduceFraction') {
     } else if (operation.name === 'divideBothSides') {
     } else if (operation.name === 'primeFactorize') {
+        primeFactorize(arg);
     } else {
         console.error('unknown operation: ' + model.onGoingMathOperation.name);
     }
+}
+
+function primeFactorize(indexes) {
+
+}
+
+function finnMinsteFaktor(n, f) {
+    const factor = f || 2;
+    return n % factor == 0 ? factor : finnMinsteFaktor(n, factor + 1);
+}
+
+function primtallsfaktoriser(n) {
+    const f = finnMinsteFaktor(n);
+    return f === n ? n : f + '*' + finnMinsteFaktor(n / f, 2);
 }
 
 function subtractTermOnBothSides(indexes) {

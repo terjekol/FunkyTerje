@@ -45,17 +45,25 @@ function doMath(arg) {
 }
 
 function primeFactorize(indexes) {
-
+    const tree = parseMathText(model.mathText);
+    const node = nodeFromIndexes(indexes, tree);
+    if (!isNumber(node)) return;
+    const number = parseInt(node.value);
+    const primeFactors = primeFactorizeImpl(number);
+    const product = parseMathText(primeFactors);
+    replaceNode(node, product);
+    model.mathText = toString(tree);
+    resetAndUpdateView();
 }
 
-function finnMinsteFaktor(n, f) {
-    const factor = f || 2;
-    return n % factor == 0 ? factor : finnMinsteFaktor(n, factor + 1);
+function findLowestFactor(number, factor) {
+    return number % factor == 0 ? factor : findLowestFactor(number, factor + 1);
 }
 
-function primtallsfaktoriser(n) {
-    const f = finnMinsteFaktor(n);
-    return f === n ? n : f + '*' + finnMinsteFaktor(n / f, 2);
+function primeFactorizeImpl(number) {
+    const factor = findLowestFactor(number, 2);
+    if (factor === number) return number;
+    return factor + '*' + primeFactorizeImpl(number / factor);
 }
 
 function subtractTermOnBothSides(indexes) {
@@ -374,10 +382,6 @@ function reduceFraction(indexes1, indexes2) {
 }
 
 function divideBothSides(indexes) {
-    resetAndUpdateView();
-}
-
-function primeFactorize(indexes) {
     resetAndUpdateView();
 }
 

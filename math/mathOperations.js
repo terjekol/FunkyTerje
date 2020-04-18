@@ -82,26 +82,30 @@ function mergeTerms(indexes1, indexes2) {
     const node2 = isUnaryMinus(selectedNode2) ? selectedNode2.content[0] : selectedNode2;
     const typeTerm1 = getType(node1);
     const typeTerm2 = getType(node2);
-    if (typeTerm1 > typeTerm2) {
-        [node1, node2] = [node2, node1];
-        [typeTerm1, typeTerm2] = [typeTerm2, typeTerm1];
-    }
-
+    if (typeTerm1 > typeTerm2) [node1, node2, typeTerm1, typeTerm2] = [node2, node1, typeTerm2, typeTerm1];
     if (typeTerm1 === 'constant') {
         if (typeTerm2 !== 'constant') return finishWithError('Konstantledd kan bare slås sammen med andre konstantledd.');
         mergeConstantAndConstant(node1, node2);
-    } else if (typeTerm1 === 'letter') {
-        if (typeTerm2 === 'product') {
-        }
+    } else if (typeTerm1 === 'letter' && ['product', 'letter'].includes(typeTerm2)) {
+        const newNode1 = replaceLetterWithProductOfOne(node1);
+        const newNode2 = replaceLetterWithProductOfOne(node2);
+        addParentAndId(tree);
+        mergeProductAndProduct(newNode1, newNode2);
     } else if (typeTerm1 === 'product') {
         if (typeTerm2 !== 'product') return finishWithError('Kan ikke slå sammen disse leddene.');
         mergeProductAndProduct(node1, node2);
     } else if (typeTerm1 === 'division') {
     }
-
     removeUnariesInUnaries(tree);
     model.mathText = toString(tree);
     resetAndUpdateView();
+}
+
+function replaceLetterWithProductOfOne(node) {
+    if (!isLetter(node)) return;
+    const newNode = makeNode('*', [{ value: '1' }, node]);
+    replaceNode(node, newNode);    
+    return newNode;
 }
 
 function mergeProductAndProduct(node1, node2) {
@@ -144,17 +148,17 @@ function mergeProductAndProduct(node1, node2) {
     }
 }
 
-function productsExceptFromFirstConstantsAreEqual(node1input, node1input) {
+function productsExceptFromFirstConstantsAreEqual(node1input, node2input) {
     const node1 = cloneNode(node1input);
-    const node2 = cloneNode(node1input);
+    const node2 = cloneNode(node2input);
     const wrapper1 = createWrapperEquation(node1);
     const wrapper2 = createWrapperEquation(node2);
     const firstFactor1 = getFirstFactorInProduct(node1);
     const firstFactor2 = getFirstFactorInProduct(node2);
     const value1 = numberOrUnaryMinusNumberValue(firstFactor1);
     const value2 = numberOrUnaryMinusNumberValue(firstFactor2);
-    if (value1 === null) return; else removeNode(firstFactor1);
-    if (value2 === null) return; else removeNode(firstFactor2);
+    if (value1 === null) return false; else removeNode(firstFactor1);
+    if (value2 === null) return false; else removeNode(firstFactor2);
     return nodesAreEqual(wrapper1, wrapper2);
 }
 

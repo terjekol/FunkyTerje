@@ -120,6 +120,11 @@ QUnit.test("merge x-terms - x=-3*x+(-(5*x))", function (assert) {
     testMergeTerms('x=-3*x+(-(5*x))', '10', '110', 'x=-8*x', assert);
 });
 
+QUnit.test("merge x-terms - x=x+x", function (assert) {
+    // []=([0]x,[1]+([10]x,[11]x))
+    testMergeTerms('x=x+x', '10', '11', 'x=2*x', assert);
+});
+
 function testMergeTerms(mathText, term1, term2, expectedMathText, assert) {
     model = { mathText };
     mergeTerms(term1, term2);

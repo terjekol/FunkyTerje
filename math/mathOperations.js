@@ -96,6 +96,7 @@ function mergeTerms(indexes1, indexes2) {
         mergeProductAndProduct(node1, node2);
     } else if (typeTerm1 === 'division') {
     }
+    addParentAndId(tree);
     doSimplifications(tree);
     model.mathText = toString(tree);
     resetAndUpdateView();
@@ -117,8 +118,8 @@ function mergeProductAndProduct(node1, node2) {
     // removeNode(node2input);
     const factor1 = getFirstFactorInProduct(node1);
     const factor2 = getFirstFactorInProduct(node2);
-    const value1 = numberOrUnaryMinusNumberValue(factor1);
-    const value2 = numberOrUnaryMinusNumberValue(factor2);
+    const value1 = numberOrUnaryMinusNumberValue(factor1) || 1;
+    const value2 = numberOrUnaryMinusNumberValue(factor2) || 1;
     // if (value1 === null) return; else removeNode(firstFactor1);
     // if (value2 === null) return; else removeNode(firstFactor2);
     const constant1 = value1 * getCombinedSignOfTopLevelTerm(node1);
@@ -130,7 +131,7 @@ function mergeProductAndProduct(node1, node2) {
         removeNode(node1);
         removeNode(node2);
     } else if (isPositive1 === isPositive2) {
-        adjustConstant(factor1, newSum);
+        adjustFactor(node1, factor1, newSum);
         removeNode(node2);
     } else {
         const positiveNode = isPositive1 ? node1 : node2;
@@ -138,14 +139,22 @@ function mergeProductAndProduct(node1, node2) {
         const positiveFactor = isPositive1 ? factor1 : factor2;
         const negativeFactor = isPositive1 ? factor2 : factor1;
         if (newSum > 0) {
-            adjustConstant(positiveFactor, newSum);
+            adjustFactor(positiveNode, positiveFactor, newSum);
             removeNode(negativeNode);
         }
         else {
-            adjustConstant(negativeFactor, newSum);
+            adjustFactor(negativeNode, negativeFactor, newSum);
             removeNode(positiveNode);
         }
     }
+}
+
+function adjustFactor(node, factor, constant) {
+    if (isNumber(factor)) {
+        factor.value = '' + Math.abs(constant);
+        return;
+    }
+    replaceNode(node, makeNode('*', [{ value: '' + constant }, node]));
 }
 
 function productsExceptFromFirstConstantsAreEqual(node1input, node2input) {
@@ -157,8 +166,8 @@ function productsExceptFromFirstConstantsAreEqual(node1input, node2input) {
     const firstFactor2 = getFirstFactorInProduct(node2);
     const value1 = numberOrUnaryMinusNumberValue(firstFactor1);
     const value2 = numberOrUnaryMinusNumberValue(firstFactor2);
-    if (value1 === null) return false; else removeNode(firstFactor1);
-    if (value2 === null) return false; else removeNode(firstFactor2);
+    if (value1 !== null) removeNode(firstFactor1);
+    if (value2 !== null) removeNode(firstFactor2);
     return nodesAreEqual(wrapper1, wrapper2);
 }
 

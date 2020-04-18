@@ -104,21 +104,48 @@ function mergeTerms(indexes1, indexes2) {
     resetAndUpdateView();
 }
 
-function mergeProductAndProduct(node1input, node2input) {
+function mergeProductAndProduct(node1, node2) {
+    if (!productsExceptFromFirstConstantsAreEqual(node1, node2)) {
+        return finishWithError('Produktledd må være like, bortsett fra ev. første konstantfaktor, for å kunne slås sammen.');
+    }
+    // const realFirstFactor = getFirstFactorInProduct(node1input);
+    // realFirstFactor.value = parseInt(firstFactor1.value) + parseInt(firstFactor2.value);
+    // removeNode(node2input);
+    const constant1 = parseInt(selectedNode1.value) * getCombinedSignOfTopLevelTerm(selectedNode1);
+    const constant2 = parseInt(selectedNode2.value) * getCombinedSignOfTopLevelTerm(selectedNode2);
+    const newSum = constant1 + constant2;
+    const isPositive1 = constant1 > 0;
+    const isPositive2 = constant2 > 0;
+    if (newSum === 0) {
+        removeNode(selectedNode1);
+        removeNode(selectedNode2);
+    } else if (isPositive1 === isPositive2) {
+        adjustConstant(selectedNode1, newSum);
+        removeNode(selectedNode2);
+    } else {
+        const positiveNode = isPositive1 ? selectedNode1 : selectedNode2;
+        const negativeNode = isPositive1 ? selectedNode2 : selectedNode1;
+        if (newSum > 0) {
+            adjustConstant(positiveNode, newSum);
+            removeNode(negativeNode);
+        }
+        else {
+            adjustConstant(negativeNode, newSum);
+            removeNode(positiveNode);
+        }
+    }
+}
+
+function productsExceptFromFirstConstantsAreEqual(node1input, node1input) {
     const node1 = cloneNode(node1input);
-    const node2 = cloneNode(node2input);
+    const node2 = cloneNode(node1input);
     const wrapper1 = createWrapperEquation(node1);
     const wrapper2 = createWrapperEquation(node2);
     const firstFactor1 = getFirstFactorInProduct(node1);
     const firstFactor2 = getFirstFactorInProduct(node2);
     if (isNumber(firstFactor1)) removeNode(firstFactor1);
     if (isNumber(firstFactor2)) removeNode(firstFactor2);
-    if (!nodesAreEqual(wrapper1, wrapper2)) {
-        return finishWithError('Produktledd må være like, bortsett fra ev. første konstantfaktor, for å kunne slås sammen.');
-    }
-    const realFirstFactor = getFirstFactorInProduct(node1input);
-    realFirstFactor.value = parseInt(firstFactor1.value) + parseInt(firstFactor2.value);
-    removeNode(node2input);
+    return nodesAreEqual(wrapper1, wrapper2);
 }
 
 function removeUnariesInUnaries(node) {
@@ -142,19 +169,16 @@ function mergeConstantAndConstant(selectedNode1, selectedNode2) {
     if (newSum === 0) {
         removeNode(selectedNode1);
         removeNode(selectedNode2);
-    }
-    else if (isPositive1 === isPositive2) {
+    } else if (isPositive1 === isPositive2) {
         adjustConstant(selectedNode1, newSum);
         removeNode(selectedNode2);
-    }
-    else {
+    } else {
         const positiveNode = isPositive1 ? selectedNode1 : selectedNode2;
         const negativeNode = isPositive1 ? selectedNode2 : selectedNode1;
         if (newSum > 0) {
             adjustConstant(positiveNode, newSum);
             removeNode(negativeNode);
-        }
-        else {
+        } else {
             adjustConstant(negativeNode, newSum);
             removeNode(positiveNode);
         }

@@ -90,10 +90,10 @@ QUnit.test("merge x-terms - x=2*x+3*x ", function (assert) {
     testMergeTerms('x=2*x+3*x', '10', '11', 'x=5*x', assert);
 });
 
-// QUnit.test("merge x-terms - x=5*x-3*x ", function (assert) {
-//     // []=([0]x,[1]+([10]*([100]2,[101]x),[11]*([110]3,[111]x)))
-//     testMergeTerms('x=5*x-3*x', '10', '11', 'x=2*x', assert);
-// });
+QUnit.test("merge x-terms - x=5*x-3*x ", function (assert) {
+    // []=([0]x,[1]+([10]*([100]2,[101]x),[11]*([110]3,[111]x)))
+    testMergeTerms('x=5*x-3*x', '10', '11', 'x=2*x', assert);
+});
 
 // QUnit.test("merge x-terms - x=3*x-5*x ", function (assert) {
 //     // []=([0]x,[1]+([10]*([100]2,[101]x),[11]*([110]3,[111]x)))

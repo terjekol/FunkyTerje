@@ -154,6 +154,10 @@ function adjustFactor(node, factor, constant) {
         factor.value = '' + Math.abs(constant);
         return;
     }
+    if (isUnaryMinus(factor)) {
+        adjustConstant(factor.content[0], constant);
+        return;
+    }
     replaceNode(node, makeNode('*', [{ value: '' + constant }, node]));
 }
 

@@ -43,13 +43,16 @@ function nodeToString(node) {
 function getIsActive(highlight, node) {
     return highlight === 'selectOneTerm' && isTopLevelTerm(node)
         || highlight === 'selectNumber' && isNumber(node)
-        || highlight === 'selectFactor' && isFactor(node)
+        || highlight === 'selectTopLevelFactor' && isTopLevelFactor(node)
         || highlight === 'selectFactorInNumerator' && isFactorInDivision(node, true)
         || highlight === 'selectFactorInDenominator' && isFactorInDivision(node, false);
 }
 
-function isFactor(node) {
-    return parentOperator('*') && (!node.operator || node.operator !== '*');
+function isTopLevelFactor(node) {
+    if (isTopLevelTerm(node) && node.value !== undefined) return true;
+    if (parentOperator(node) !== '*') return false;
+    const product = getTopLevelProductOfFactor(node);    
+    return isTopLevelTerm(product);
 }
 
 function getTopLevelProductOfFactor(node) {

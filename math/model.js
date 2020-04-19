@@ -4,7 +4,7 @@ const model = {
         selectOneTerm: 'velg et ledd', 
         selectFactorInNumerator: 'velg en faktor i telleren',
         selectFactorInDenominator: 'velg en faktor i nevneren',
-        selectFactor: 'velg en faktor',
+        selectTopLevelFactor: 'velg et ledd eller en faktor i et ledd',
         selectNumber: 'velg et tall',
     },
     mathOperations: {
@@ -29,7 +29,7 @@ const model = {
             description: 'Forkorte brøk',
         },            
         divideBothSides: {
-            steps:['selectFactor'],
+            steps:['selectTopLevelFactor'],
             icon: '|÷',
             description: 'Dele begge sider av ligningen',
         },            

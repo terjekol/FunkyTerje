@@ -35,6 +35,7 @@ function doMath(arg) {
         if (args.length === 0) nextStep(arg);
         else reduceFraction(args[0], arg);
     } else if (operation.name === 'divideBothSides') {
+        divideBothSides(arg);
     } else if (operation.name === 'primeFactorize') {
         primeFactorize(arg);
     } else {
@@ -413,6 +414,11 @@ function reduceFraction(indexes1, indexes2) {
 }
 
 function divideBothSides(indexes) {
+    const tree = parseMathText(model.mathText);
+    const node = nodeFromIndexes(indexes, tree);
+    replaceNode(tree.content[0], makeNode('/', [tree.content[0], cloneNode(node)]));
+    replaceNode(tree.content[1], makeNode('/', [tree.content[1], cloneNode(node)]));
+    model.mathText = toString(tree);
     resetAndUpdateView();
 }
 

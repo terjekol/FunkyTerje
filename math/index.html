@@ -14,6 +14,7 @@
         body {
             background-color: rgb(30, 30, 30);
             color: rgb(220, 184, 98);
+            font-family: Verdana, Helvetica, sans-serif;
         }
 
         button {
@@ -25,20 +26,25 @@
             text-align: center;
             background-color: rgb(60, 60, 60);
             color: rgb(206, 145, 120);
-            /* color: rgb(86, 156, 214); */
+
         }
 
         button.ongoing {
             background-color: rgb(90, 90, 90);
         }
 
-        button.display{
+        button.display {
             width: 40px;
             height: 40px;
             font-size: 12pt;
         }
 
-        div.selectedFunction{
+        div.error {
+            font-size: 16pt;
+            color: rgb(214, 80, 27);
+        }
+
+        div.selectedFunction {
             display: flex;
             align-items: center;
         }
@@ -52,7 +58,6 @@
         div.txt {
             font-size: 18pt;
             color: rgb(156, 220, 254);
-            font-family: Verdana, Helvetica, sans-serif;
         }
 
         div.math {
@@ -87,8 +92,6 @@
         #menuBar {
             display: flex;
         }
-
-
     </style>
 </head>
 
@@ -103,7 +106,7 @@
 
         function updateView() {
             document.getElementById('app').innerHTML = `
-                <div style="color:red">${model.errorMessage || ''}</div>
+                <div class="error">${model.errorMessage || ''}</div>
                 <div id="text" class="txt">${getText()}</div>
                 <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
                 <div id="menuBar">${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}</div>

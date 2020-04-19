@@ -1,6 +1,7 @@
-function createMenuHtml(options) {
+function createMenuHtml(options, onGoingMathOperation) {
+    const name = onGoingMathOperation && onGoingMathOperation.name;
     return Object.keys(options).map(f => `
-        <button onclick="selectMath('${f}')">${getIcon(f)}</button>
+        <button class="${name===f?'ongoing':''}" onclick="selectMath('${f}')">${getIcon(f)}</button>
     `).join('');
 }
 

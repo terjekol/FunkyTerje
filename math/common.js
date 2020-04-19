@@ -63,12 +63,7 @@ function treeAsText(node) {
     return '[' + indexesFromNode(node) + ']' + txt;
 }
 
-// function getFirstConstantInProduct(node) {
-//     if (isNumber(node)) return node;
-//     if (isUnaryMinus(node) && isNumber(node.content[0])) return -1 * parseInt(node.content[0]);
-//     if (node.operator !== '*') return null;
-//     const first = getFirstConstantInProduct(node.content[0]);
-//     if (first !== null) return first;
-//     getFirstConstantInProduct(node.content[1]);
-// }
-
+function range(min, max){
+    const count = max - min;
+    return Array.from(Array(count).keys()).map(n=>n+min);
+}

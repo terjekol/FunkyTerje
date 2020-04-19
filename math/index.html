@@ -10,93 +10,12 @@
     <script src="math2html.js"></script>
     <script src="mathOperations.js"></script>
     <script src="model.js"></script>
-    <style>
-        body {
-            background-color: rgb(30, 30, 30);
-            color: rgb(220, 184, 98);
-            font-family: Verdana, Helvetica, sans-serif;
-        }
-
-        button {
-            width: 70px;
-            height: 70px;
-            font-size: 20pt;
-            line-height: 0.6em;
-            margin: 5px;
-            text-align: center;
-            background-color: rgb(60, 60, 60);
-            color: rgb(206, 145, 120);
-
-        }
-
-        button.ongoing {
-            background-color: rgb(90, 90, 90);
-        }
-
-        button.display {
-            width: 40px;
-            height: 40px;
-            font-size: 12pt;
-        }
-
-        div.error {
-            font-size: 16pt;
-            color: rgb(214, 80, 27);
-        }
-
-        div.selectedFunction {
-            display: flex;
-            align-items: center;
-        }
-
-        div.function {
-            color: rgb(206, 145, 120);
-            vertical-align: middle;
-            height: 100%;
-        }
-
-        div.txt {
-            font-size: 18pt;
-            color: rgb(156, 220, 254);
-        }
-
-        div.math {
-            font-size: 80pt;
-            user-select: none;
-            color: rgb(220, 220, 170);
-        }
-
-        div.flex {
-            display: flex;
-            align-items: center;
-            padding: 2px;
-        }
-
-        div.vertical {
-            flex-direction: column;
-        }
-
-        div.fraction {
-            border-bottom: 9px solid rgb(220, 220, 170);
-            height: 0px;
-            width: 100%;
-        }
-
-        div.highlight {
-            border: 1px solid gray;
-            border-radius: 5px;
-            margin-left: 4px;
-            margin-right: 4px;
-        }
-
-        #menuBar {
-            display: flex;
-        }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-    <div id="app"></div>
+    <div id="app">
+    </div>
 
     <script>
         // model.mathText = 'x+1/(x+2)=5';
@@ -106,11 +25,19 @@
 
         function updateView() {
             document.getElementById('app').innerHTML = `
-                <div class="error">${model.errorMessage || ''}</div>
-                <div id="text" class="txt">${getText()}</div>
-                <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
-                <div id="menuBar">${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}</div>
+                <div id="menu">
+                    ${createLevelsMenuHtml()}
+                </div>
+                <div id="content">
+                    <div id="text" class="txt">${getText()}</div>
+                    <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
+                    <div id="menuBar">${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}</div>
+                </div>
             `;
+        }
+
+        function createLevelsMenuHtml() {
+            return '';
         }
 
         function getStep() {
@@ -119,8 +46,11 @@
         }
 
         function getText() {
+            const message = 'Velg en matematisk operasjon.';
+            const error = `<div class="error">${model.errorMessage || ''}</div>`;
+            if (model.errorMessage) return createText(error, message);
             const operation = model.onGoingMathOperation;
-            if (!operation) return createText();
+            if (!operation) return createText('', message);
             const step = operation ? operation.step : null;
             if (!step) return createText();
             const operationName = operation.name;
@@ -131,14 +61,14 @@
                     <div class="function">${mathOperation.description}</div>
                 </div>
                 `;
-            const stepText = !step ? '' : `<i>${model.steps[step]}</i>`;
+            const stepText = step ? model.steps[step] : '';
             return createText(description, stepText);
         }
 
         function createText(fn, step) {
             return `
                 <div>${fn || '&nbsp;'}</div>
-                <div class="step">${step || '&nbsp;'}</div>
+                <div class="step"><i>${step || '&nbsp;'}</i></div>
                 `;
         }
 

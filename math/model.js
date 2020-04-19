@@ -1,11 +1,11 @@
 const model = {
     mathText: null,
     steps: {
-        selectOneTerm: 'velg et ledd', 
-        selectFactorInNumerator: 'velg en faktor i telleren',
-        selectFactorInDenominator: 'velg en faktor i nevneren',
-        selectTopLevelFactor: 'velg et ledd eller en faktor i et ledd',
-        selectNumber: 'velg et tall',
+        selectOneTerm: 'Velg et ledd.', 
+        selectFactorInNumerator: 'Velg en faktor i telleren.',
+        selectFactorInDenominator: 'Velg en faktor i nevneren.',
+        selectTopLevelFactor: 'Velg et ledd eller en faktor i et ledd.',
+        selectNumber: 'Velg et tall.',
     },
     mathOperations: {
         subtractTermOnBothSides: {

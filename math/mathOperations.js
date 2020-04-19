@@ -86,16 +86,22 @@ function subtractTermOnBothSides(indexes) {
 
 function moveTermToOtherSide(indexes) {
     const tree = parseMathText(model.mathText);
-    const selectedNode = nodeFromIndexes(indexes, tree);
-    delete selectedNode.operator;
-    delete selectedNode.content;
-    selectedNode.value = '0';
-    const newTree = makeNode('=', [
-        makeNode('-', [tree.content[0], cloneNode(selectedNode)]),
-        makeNode('-', [tree.content[1], cloneNode(selectedNode)]),
-    ]);
-    model.mathText = toString(newTree);
+    const node = nodeFromIndexes(indexes, tree);
+    const nodeSide = getSideOfEquaction(node);
+    const otherSide = 1 - nodeSide;
+    const newNodeContent = [tree.content[otherSide], node].map(cloneNode);
+    const newNode = makeNode('-', newNodeContent);
+    replaceNode(tree.content[otherSide], newNode);
+    replaceNode(node, { value: '0' });
+    doSimplifications(tree);
+    model.mathText = toString(tree);
     resetAndUpdateView();
+}
+
+function getSideOfEquaction(node) {
+    return parentOperator(node) === '='
+        ? indexWithParent(node)
+        : getSideOfEquaction(node.parent);
 }
 
 function mergeTerms(indexes1, indexes2) {
@@ -215,6 +221,19 @@ function doSimplifications(node) {
     while (replaceProductsOfOne(node));
     removeUnariesInUnaries(node);
     while (replaceDivideByOne(node));
+    while (removeTermsZero(node));
+}
+
+function removeTermsZero(node) {
+    if (isNumber(node) && node.value === '0' && '+-'.includes(parentOperator(node))) {
+        if (isUnaryMinus(node.parent)) removeNode(node.parent);
+        else replaceNode(node.parent, siblingNode(node));
+        return true;
+    }
+    if (node.value !== undefined) return false;
+    if (removeTermsZero(node.content[0])) return true;
+    if (node.content.length > 1 && removeTermsZero(node.content[1])) return true;
+    return false;
 }
 
 function replaceDivideByOne(node) {

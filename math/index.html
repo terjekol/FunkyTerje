@@ -20,7 +20,7 @@
     <script>
         // model.mathText = 'x+1/(x+2)=5';
         //model.mathText = 'x=1+(-2)-3';
-        model.mathText = '2*x=6+x';
+        model.mathText = '2*x=6*x';
         updateView();
 
         function updateView() {
@@ -46,7 +46,7 @@
         }
 
         function getText() {
-            const message = 'Velg en matematisk operasjon.';
+            const message = createMessage();
             const error = `<div class="error">${model.errorMessage || ''}</div>`;
             if (model.errorMessage) return createText(error, message);
             const operation = model.onGoingMathOperation;
@@ -63,6 +63,30 @@
                 `;
             const stepText = step ? model.steps[step] : '';
             return createText(description, stepText);
+        }
+
+        function createMessage() {
+            return model.mathText && isEquationSolved(model.mathText)
+                ? 'Ligningen er løst.'
+                : 'Velg en matematisk operasjon.';
+        }
+
+        function isEquationSolved(mathText) {
+            const node = parseMathText(mathText);
+            const letterOnOneSide = isLetter(node.content[0]) || isLetter(node.content[1]);
+            const numberOnOneSide = isNumber(node.content[0]) || isNumber(node.content[1]);
+            if (letterOnOneSide && numberOnOneSide) return true;
+            if (!letterOnOneSide) return false;
+            const fraction = node.content[0].operator === '/' ? node.content[0]
+                : node.content[1].operator === '/' ? node.content[1] : null;
+            if (fraction === null) return false;
+            if (!isNumber(fraction.content[0]) || !isNumber(fraction.content[1])) return false;
+            const number1 = parseInt(fraction.content[0].value);
+            const number2 = parseInt(fraction.content[1].value);
+            return !primeFactorizeImpl(number1).includes('*')
+                && !primeFactorizeImpl(number2).includes('*');
+
+
         }
 
         function createText(fn, step) {

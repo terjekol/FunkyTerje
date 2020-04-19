@@ -95,6 +95,7 @@ function moveTermToOtherSide(indexes) {
     const newNode = makeNode(newSign, newNodeContent);
     replaceNode(tree.content[otherSide], newNode);
     replaceNode(node, { value: '0' });
+    addParentAndId(tree);
     doSimplifications(tree);
     model.mathText = toString(tree);
     resetAndUpdateView();

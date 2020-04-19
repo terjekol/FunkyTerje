@@ -90,7 +90,9 @@ function moveTermToOtherSide(indexes) {
     const nodeSide = getSideOfEquaction(node);
     const otherSide = 1 - nodeSide;
     const newNodeContent = [tree.content[otherSide], node].map(cloneNode);
-    const newNode = makeNode('-', newNodeContent);
+    const existingSign = getCombinedSignOfTopLevelTerm(node);
+    const newSign = existingSign === 1 ? '-' : '+';
+    const newNode = makeNode(newSign, newNodeContent);
     replaceNode(tree.content[otherSide], newNode);
     replaceNode(node, { value: '0' });
     doSimplifications(tree);
@@ -226,8 +228,11 @@ function doSimplifications(node) {
 
 function removeTermsZero(node) {
     if (isNumber(node) && node.value === '0' && '+-'.includes(parentOperator(node))) {
-        if (isUnaryMinus(node.parent)) removeNode(node.parent);
-        else replaceNode(node.parent, siblingNode(node));
+        if (isUnaryMinus(node.parent) || indexWithParent(node) === 0 && parentOperator(node) === '-') {
+            removeNode(node.parent);
+        } else {
+            replaceNode(node.parent, siblingNode(node));
+        }
         return true;
     }
     if (node.value !== undefined) return false;

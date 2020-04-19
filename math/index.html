@@ -17,22 +17,30 @@
         }
 
         button {
+            width: 70px;
+            height: 70px;
+            font-size: 20pt;
+            line-height: 0.6em;
+            margin: 5px;
+            text-align: center;
             background-color: rgb(60, 60, 60);
             color: rgb(206, 145, 120);
             /* color: rgb(86, 156, 214); */
         }
 
-        div.icon{
-            color: rgb(206, 145, 120);
-            display: inline;
-            font-size: 20pt;
-            line-height: 0.6em;
-            margin: 5px;
-            text-align: center;            
-        }
-
         button.ongoing {
             background-color: rgb(90, 90, 90);
+        }
+
+        div.selectedFunction{
+            display: flex;
+            align-items: center;
+        }
+        
+        div.function {
+            color: rgb(206, 145, 120);
+            vertical-align: middle;
+            height: 100%;
         }
 
         div.txt {
@@ -74,14 +82,7 @@
             display: flex;
         }
 
-        button {
-            width: 70px;
-            height: 70px;
-            font-size: 20pt;
-            line-height: 0.6em;
-            margin: 5px;
-            text-align: center;
-        }
+
     </style>
 </head>
 
@@ -116,7 +117,10 @@
             const operationName = operation.name;
             const mathOperation = model.mathOperations[operationName];
             const description = `
-                <div class="icon">${getIcon(operationName)}</div>  ${mathOperation.description}
+                <div class="selectedFunction">
+                    <button disabled>${getIcon(operationName)}</button>                     
+                    <div class="function">${mathOperation.description}</div>
+                </div>
                 `;
             const stepText = !step ? '' : `<i>${model.steps[step]}</i>`;
             return createText(description, stepText);
@@ -124,7 +128,7 @@
 
         function createText(fn, step) {
             return `
-                <div class="function">${fn || '&nbsp;'}</div>
+                <div>${fn || '&nbsp;'}</div>
                 <div class="step">${step || '&nbsp;'}</div>
                 `;
         }

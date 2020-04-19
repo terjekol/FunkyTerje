@@ -22,7 +22,7 @@
 
         div.flex {
             display: flex;
-            align-items: center;           
+            align-items: center;
             padding: 2px;
         }
 
@@ -65,11 +65,10 @@
     <script>
         // model.mathText = 'x+1/(x+2)=5';
         //model.mathText = 'x=1+(-2)-3';
-        model.mathText = 'x=4/6';
+        model.mathText = '2*x=2/(2*3)';
         updateView();
 
         function updateView() {
-
             document.getElementById('app').innerHTML = `
                 <div style="color:red">${model.errorMessage || ''}</div>
                 <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
@@ -93,7 +92,7 @@
             const description = mathOperation.description;
             const stepNo = operation.arguments.length + 1;
             const stepText = stepNo + ': ' + (!step ? '' : model.steps[step])
-            return  description + '<br/>' + stepText;
+            return description + '<br/>' + stepText;
         }
 
     </script>

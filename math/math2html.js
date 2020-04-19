@@ -43,21 +43,33 @@ function nodeToString(node) {
 function getIsActive(highlight, node) {
     return highlight === 'selectOneTerm' && isTopLevelTerm(node)
         || highlight === 'selectNumber' && isNumber(node)
-        || highlight === 'selectFactorInNumerator' && isNumerator(node)
-        || highlight === 'selectFactorInDenominator' && isDenominator(node);
+        || highlight === 'selectFactor' && isFactor(node)
+        || highlight === 'selectFactorInNumerator' && isFactorInDivision(node, true)
+        || highlight === 'selectFactorInDenominator' && isFactorInDivision(node, false);
 }
 
-function isFactor() {
-    return false;
+function isFactor(node) {
+    return parentOperator('*') && (!node.operator || node.operator !== '*');
 }
 
-function isNumerator() {
-    return false;
+function getTopLevelProductOfFactor(node) {
+    return parentOperator(node) === '*'
+        ? getTopLevelProductOfFactor(node.parent)
+        : node;
 }
 
-function isDenominator() {
-    return false;
+function isFactorInDivision(node, lookInNumerator) {
+    const isPrimitiveOrNotProduct = !node.operator || node.operator !== '*';
+    if (isNumeratorOrDenominator(node, lookInNumerator)) return isPrimitiveOrNotProduct;
+    const product = getTopLevelProductOfFactor(node);
+    return isNumeratorOrDenominator(product, lookInNumerator);
 }
+
+function isNumeratorOrDenominator(node, numerator) {
+    const index = numerator ? 0 : 1;
+    return parentOperator(node) === '/' && indexWithParent(node) === index;
+}
+
 
 function createNodeHtml(node, highlight) {
     const op = node.operator.trim();

@@ -29,19 +29,25 @@ function doMath(arg) {
     } else if (operation.name === 'moveTermToOtherSide') {
         moveTermToOtherSide(arg);
     } else if (operation.name === 'mergeTerms') {
-        if (args.length === 0) {
-            args.push(arg);
-            updateView();
-        } else {
-            mergeTerms(args[0], arg);
-        }
+        if (args.length === 0) nextStep(arg);
+        else mergeTerms(args[0], arg);
     } else if (operation.name === 'reduceFraction') {
+        if (args.length === 0) nextStep(arg);
+        else reduceFraction(args[0], arg);
     } else if (operation.name === 'divideBothSides') {
     } else if (operation.name === 'primeFactorize') {
         primeFactorize(arg);
     } else {
         console.error('unknown operation: ' + model.onGoingMathOperation.name);
     }
+}
+
+function nextStep(arg) {
+    const operation = model.onGoingMathOperation;
+    const args = operation.arguments;
+    args.push(arg);
+    selectMathImpl();
+    updateView();
 }
 
 function primeFactorize(indexes) {

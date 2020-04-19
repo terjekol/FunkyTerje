@@ -213,6 +213,20 @@ function numberOrUnaryMinusNumberValue(node) {
 function doSimplifications(node) {
     while (replaceProductsOfOne(node));
     removeUnariesInUnaries(node);
+    while (replaceDivideByOne(node));
+}
+
+function replaceDivideByOne(node) {
+    const isDenominator = parentOperator(node) === '/' && indexWithParent(node) === 1;
+    if (isDenominator && node.value === '1') {
+        const fraction = node.parent;
+        replaceNode(fraction, fraction.content[0]);
+        return true;
+    }
+    if (node.value !== undefined) return false;
+    if (replaceDivideByOne(node.content[0])) return true;
+    if (node.content.length > 1 && replaceDivideByOne(node.content[1])) return true;
+    return false;
 }
 
 function replaceProductsOfOne(node) {
@@ -384,6 +398,17 @@ function indexWithParent(node) {
 }
 
 function reduceFraction(indexes1, indexes2) {
+    const tree = parseMathText(model.mathText);
+    const node1 = nodeFromIndexes(indexes1, tree);
+    const node2 = nodeFromIndexes(indexes2, tree);
+    if (!nodesAreEqual(node1, node2)) {
+        return finishWithError('Faktorene er ulike og kan ikke forkortes mot hverandre.');
+    }
+    replaceNode(node1, { value: '1' });
+    replaceNode(node2, { value: '1' });
+    addParentAndId(tree);
+    doSimplifications(tree);
+    model.mathText = toString(tree);
     resetAndUpdateView();
 }
 

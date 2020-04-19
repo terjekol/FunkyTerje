@@ -20,19 +20,17 @@
     <script>
         // model.mathText = 'x+1/(x+2)=5';
         //model.mathText = 'x=1+(-2)-3';
-        model.mathText = '2*x=6*x';
+        model.mathText = '9*x-8=7*x+6';
         updateView();
 
         function updateView() {
             document.getElementById('app').innerHTML = `
-                <div id="menu">
+                <div id="menu">                    
                     ${createLevelsMenuHtml()}
                 </div>
-                <div id="content">
-                    <div id="text" class="txt">${getText()}</div>
-                    <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
-                    <div id="menuBar">${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}</div>
-                </div>
+                <div id="txt">${getText()}</div>
+                <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
+                <div id="menuBar">${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}</div>
             `;
         }
 

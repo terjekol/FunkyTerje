@@ -49,7 +49,8 @@
         }
 
         const levelExerciseFunctions = [
-            () => randomFlipOrNot('x=' + randomNumber()),
+            () => randomFlipOrNot('x=' + randomSign('') + randomNumber()),
+            () => randomFlipOrNot('x=' + randomSign('') + randomNumber() + randomSign() + randomNumber()),
         ];
 
         function newExercise() {

@@ -72,8 +72,14 @@ function randomNumber() {
     return 1 + Math.floor(Math.random() * 9);
 }
 
-function randomFlipOrNot(equation){
-    if(Math.random() < 0.5) return equation;
+function randomFlipOrNot(equation) {
+    if (Math.random() < 0.5) return equation;
     const parts = equation.split('=');
     return parts[1] + '=' + parts[0];
+}
+
+function randomSign(plusSign) {
+    return Math.random() < 0.5 ? '-' :
+           plusSign === undefined ? '+' :
+           plusSign;
 }

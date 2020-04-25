@@ -30,10 +30,10 @@
                         <h3>Oppgaver:</h3>
                     </div>
                     <div class="levels" >
-                        <button class="excercise">Ny nivå ${model.level}-oppgave</button>
+                        <button class="excercise"  onclick="newExercise()"">Ny nivå ${model.level}-oppgave</button>
                         <div style="width: 40px"></div>
                         <input type="text" oninput="model.ownExercise=this.value"/>
-                        <button class="excercise">Ny egen oppgave</button>
+                        <button class="excercise" onclick="newCustomExercise()">Ny egen oppgave</button>
                     </div>
                     <div class="levels">
                         <h3>Nivåer:</h3>
@@ -46,6 +46,19 @@
                 <div id="menuBar">${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}</div>
                 <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
             `;
+        }
+
+        function newExercise() {
+
+        }
+
+        function newCustomExercise() {
+            model.errorMessage = '';
+            let result = null;
+            try { result = parseMathText(model.ownExercise); } catch (error) { }
+            if (result !== null) model.mathText = model.ownExercise;
+            else model.errorMessage = `Kan ikke tolke uttrykket <tt>${model.ownExercise}</tt>`;
+            updateView();
         }
 
         function createLevelsMenuHtml() {
@@ -69,7 +82,7 @@
 
         function getText() {
             const message = createMessage();
-            const error = `<div class="error">${model.errorMessage || ''}</div>`;
+            // const error = `<div class="error">${model.errorMessage || ''}</div>`;
             if (model.errorMessage) {
                 const description = createDescriptionHtml('error', model.errorMessage, 'error');
                 return createText(description, message);

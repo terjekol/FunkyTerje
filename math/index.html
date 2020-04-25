@@ -46,25 +46,35 @@
         function getText() {
             const message = createMessage();
             const error = `<div class="error">${model.errorMessage || ''}</div>`;
-            if (model.errorMessage) return createText(error, message);
+            if (model.errorMessage) {
+                const description = createDescriptionHtml('error', model.errorMessage, 'error');
+                return createText(description, message);
+            }
             const operation = model.onGoingMathOperation;
             if (!operation) return createText('', message);
             const step = operation ? operation.step : null;
             if (!step) return createText();
             const operationName = operation.name;
             const mathOperation = model.mathOperations[operationName];
-            const description = `
-                <div class="selectedFunction">
-                    <button class="display" disabled>${getIcon(operationName)}</button>                     
-                    <div class="function">${mathOperation.description}</div>
-                </div>
-                `;
-            // const stepText = step ? model.steps[step] : '';
+            const description = createDescriptionHtml(operationName, mathOperation.description);
             const length = operation.arguments ? operation.arguments.length : 0;
             const stepsHtml = operation.steps.map((step, i) => `
                 <li class="${i == length ? '' : 'passive'}">${step}</li>
                 `).join('');
             return createText(description, `<ol>${stepsHtml}</ol>`);
+        }
+
+        function createDescriptionHtml(operationName, text, extraCssClass) {
+            return `
+                <div class="selectedFunction">
+                    <button class="display ${extraCssClass || ''}" disabled>
+                        ${getIcon(operationName)}
+                    </button>                     
+                    <div class="${extraCssClass || 'function'}">
+                        ${text}
+                    </div>
+                </div>
+                `;
         }
 
         function createMessage() {

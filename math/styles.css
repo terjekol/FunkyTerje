@@ -66,8 +66,7 @@ button.display {
   font-size: 12pt;
 }
 
-div.error {
-  font-size: 16pt;
+.error {
   color: rgb(214, 80, 27);
 }
 

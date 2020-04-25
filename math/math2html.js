@@ -1,11 +1,12 @@
 function createMenuHtml(options, onGoingMathOperation) {
     const name = onGoingMathOperation && onGoingMathOperation.name;
     return Object.keys(options).map(f => `
-        <button class="${name===f?'ongoing':''}" onclick="selectMath('${f}')">${getIcon(f)}</button>
+        <button class="${name === f ? 'ongoing' : ''}" onclick="selectMath('${f}')">${getIcon(f)}</button>
     `).join('');
 }
 
 function getIcon(f) {
+    if (f === 'error') return '⚠';
     return model.mathOperations[f].icon
         .replace(/\n/g, '<br/>')
         .replace(/ /g, '&nbsp;');
@@ -52,7 +53,7 @@ function getIsActive(highlight, node) {
 function isTopLevelFactor(node) {
     if (isTopLevelTerm(node) && node.value !== undefined) return true;
     if (parentOperator(node) !== '*') return false;
-    const product = getTopLevelProductOfFactor(node);    
+    const product = getTopLevelProductOfFactor(node);
     return isTopLevelTerm(product);
 }
 
@@ -73,7 +74,6 @@ function isNumeratorOrDenominator(node, numerator) {
     const index = numerator ? 0 : 1;
     return parentOperator(node) === '/' && indexWithParent(node) === index;
 }
-
 
 function createNodeHtml(node, highlight) {
     const op = node.operator.trim();

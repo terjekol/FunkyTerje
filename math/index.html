@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <script src="common.js"></script>
+    <script src="exercises.js"></script>
     <script src="parser.js"></script>
     <script src="math2html.js"></script>
     <script src="mathOperations.js"></script>
@@ -47,11 +48,6 @@
                 <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
             `;
         }
-
-        const levelExerciseFunctions = [
-            () => randomFlipOrNot('x=' + randomSign('') + randomNumber()),
-            () => randomFlipOrNot('x=' + randomSign('') + randomNumber() + randomSign() + randomNumber()),
-        ];
 
         function newExercise() {
             const fn = levelExerciseFunctions[model.level];

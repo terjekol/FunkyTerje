@@ -34,7 +34,7 @@ function isDivision(node) {
 
 function isTopLevelTerm(node) {
     if ('=+-'.includes(node.operator) && node.content.length === 2) return false;
-    return firstParentOperatorOtherThan('+-', node) === '=';
+    return firstParentOperatorOtherThan('+-', node) === '=' && !isUnaryMinus(node.parent);
 }
 
 function firstParentOperatorOtherThan(operators, node) {

@@ -2,7 +2,7 @@ function selectMath(functionName) {
     model.errorMessage = '';
     model.onGoingMathOperation = {
         name: functionName,
-        arguments: [],
+        arguments: [],        
     };
     selectMathImpl();
 }
@@ -15,6 +15,7 @@ function selectMathImpl() {
         console.error('unknown function ' + functionName);
         return;
     }
+    operation.steps = selectedFunction.steps.map(step=>model.steps[step]);
     const stepIndex = model.onGoingMathOperation.arguments.length;
     const step = selectedFunction.steps[stepIndex];
     model.onGoingMathOperation.step = step;
@@ -45,8 +46,7 @@ function doMath(arg) {
 
 function nextStep(arg) {
     const operation = model.onGoingMathOperation;
-    const args = operation.arguments;
-    args.push(arg);
+    operation.arguments.push(arg);
     selectMathImpl();
     updateView();
 }

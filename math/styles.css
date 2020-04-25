@@ -7,11 +7,11 @@ body {
   height: 100vh;
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: 100px 200px 100px auto;
+  grid-template-rows: 140px 100px auto auto;
   grid-template-areas:
     'txt'
-    'mathContent'
     'menuBar'
+    'mathContent'
     'menu';
 }
 
@@ -109,4 +109,8 @@ div.highlight {
   border-radius: 5px;
   margin-left: 4px;
   margin-right: 4px;
+}
+
+li.passive{
+  color: gray;
 }

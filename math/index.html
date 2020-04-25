@@ -29,8 +29,8 @@
                     ${createLevelsMenuHtml()}
                 </div>
                 <div id="txt">${getText()}</div>
-                <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
                 <div id="menuBar">${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}</div>
+                <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
             `;
         }
 
@@ -59,8 +59,12 @@
                     <div class="function">${mathOperation.description}</div>
                 </div>
                 `;
-            const stepText = step ? model.steps[step] : '';
-            return createText(description, stepText);
+            // const stepText = step ? model.steps[step] : '';
+            const length = operation.arguments ? operation.arguments.length : 0;
+            const stepsHtml = operation.steps.map((step, i) => `
+                <li class="${i == length ? '' : 'passive'}">${step}</li>
+                `).join('');
+            return createText(description, `<ol>${stepsHtml}</ol>`);
         }
 
         function createMessage() {

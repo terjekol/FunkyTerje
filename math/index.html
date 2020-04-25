@@ -35,7 +35,18 @@
         }
 
         function createLevelsMenuHtml() {
-            return '';
+            const levelsHtml = range(0, 6).map(level => `
+                <button class="level ${level === model.level ? 'selectedLevel' : ''}"
+                        onclick="selectLevel(${level})">
+                    ${level}
+                </button>
+            `).join('');
+            return `<div class="levels"><h3>Levels:</h3>${levelsHtml}</div>`;
+        }
+
+        function selectLevel(level){
+            model.level = level;
+            updateView();
         }
 
         function getStep() {
@@ -97,8 +108,6 @@
             const number2 = parseInt(fraction.content[1].value);
             return !primeFactorizeImpl(number1).includes('*')
                 && !primeFactorizeImpl(number2).includes('*');
-
-
         }
 
         function createText(fn, step) {

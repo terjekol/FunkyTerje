@@ -63,7 +63,7 @@ function treeAsText(node) {
     return '[' + indexesFromNode(node) + ']' + txt;
 }
 
-function range(min, max){
+function range(min, max) {
     const count = max - min;
-    return Array.from(Array(count).keys()).map(n=>n+min);
+    return Array.from(Array(count).keys()).map(n => n + min);
 }

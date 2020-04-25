@@ -48,8 +48,14 @@
             `;
         }
 
-        function newExercise() {
+        const levelExerciseFunctions = [
+            () => randomFlipOrNot('x=' + randomNumber()),
+        ];
 
+        function newExercise() {
+            const fn = levelExerciseFunctions[model.level];
+            model.mathText = fn();
+            updateView();
         }
 
         function newCustomExercise() {

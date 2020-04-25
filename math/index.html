@@ -130,7 +130,8 @@
         function isEquationSolved(mathText) {
             const node = parseMathText(mathText);
             const letterOnOneSide = isLetter(node.content[0]) || isLetter(node.content[1]);
-            const numberOnOneSide = isNumber(node.content[0]) || isNumber(node.content[1]);
+            const numberOnOneSide = isNumber(node.content[0]) || isNumber(node.content[1])
+                || isUnaryNumber(node.content[0]) || isUnaryNumber(node.content[1]);
             if (letterOnOneSide && numberOnOneSide) return true;
             if (!letterOnOneSide) return false;
             const fraction = node.content[0].operator === '/' ? node.content[0]
@@ -141,6 +142,10 @@
             const number2 = parseInt(fraction.content[1].value);
             return !primeFactorizeImpl(number1).includes('*')
                 && !primeFactorizeImpl(number2).includes('*');
+        }
+
+        function isUnaryNumber(node) {
+            return isUnaryMinus(node) && isNumber(node.content[0]);
         }
 
         function createText(fn, step) {

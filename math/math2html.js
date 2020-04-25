@@ -100,11 +100,21 @@ function createNodeHtml(node, highlight) {
         </div>
         `;
     }
-    if (op === '-' && node.content.length === 1) return `
+    if (op === '-' && node.content.length === 1) {
+        const child = node.content[0];
+        if(isNumber(child) || isLetter(child)){
+            return `
+            <div class="flex">            
+            -${createHtml(node.content[0], highlight)}
+            </div>
+            `;
+        } 
+        return `
         <div class="flex">            
         (-${createHtml(node.content[0], highlight)})
         </div>
         `;
+    }
     console.error('cannot create HTML', node);
 }
 

@@ -35,7 +35,7 @@
         }
 
         function createLevelsMenuHtml() {
-            const levelsHtml = range(0, 6).map(level => `
+            const levelsHtml = range(0, 7).map(level => `
                 <button class="level ${level === model.level ? 'selectedLevel' : ''}"
                         onclick="selectLevel(${level})">
                     ${level}

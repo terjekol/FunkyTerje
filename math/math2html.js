@@ -1,8 +1,15 @@
 function createMenuHtml(options, onGoingMathOperation) {
     const name = onGoingMathOperation && onGoingMathOperation.name;
-    return Object.keys(options).map(f => `
+    const operations = Object.keys(options).filter(isOperationAvailable);
+    return operations.map(f => `
         <button class="${name === f ? 'ongoing' : ''}" onclick="selectMath('${f}')">${getIcon(f)}</button>
     `).join('');
+}
+
+function isOperationAvailable(operationName) {
+    const operation = model.mathOperations[operationName];
+    return model.level >= operation.levels.first
+        && (!operation.levels.last || model.level <= operation.levels.last);
 }
 
 function getIcon(f) {

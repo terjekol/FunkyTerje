@@ -23,7 +23,7 @@ const model = {
             description: 'Trekke fra på begge sider av ligningen',
             levels: {
                 first: 2,
-                last: 2,
+                last: 3,
             }
         },
         moveTermToOtherSide: {

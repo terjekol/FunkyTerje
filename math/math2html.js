@@ -102,13 +102,13 @@ function createNodeHtml(node, highlight) {
     }
     if (op === '-' && node.content.length === 1) {
         const child = node.content[0];
-        if(isNumber(child) || isLetter(child)){
+        if (isNumber(child) || isLetter(child)) {
             return `
             <div class="flex">            
             -${createHtml(node.content[0], highlight)}
             </div>
             `;
-        } 
+        }
         return `
         <div class="flex">            
         (-${createHtml(node.content[0], highlight)})
@@ -119,8 +119,9 @@ function createNodeHtml(node, highlight) {
 }
 
 function showMultiplicationOperator(node) {
-    if (isNumber(node.content[0])
-        && (isLetter(node.content[1]) || isMultiplication(node.content[1])))
+    const isNumberOrUnaryMinusNumber = isNumber(node.content[0])
+        || isUnaryMinus(node.content[0]) && isNumber(node.content[0].content[0]);
+    if (isNumberOrUnaryMinusNumber && (isLetter(node.content[1]) || isMultiplication(node.content[1])))
         return false;
     return true;
 }

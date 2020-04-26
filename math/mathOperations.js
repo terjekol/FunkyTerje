@@ -93,7 +93,10 @@ function moveTermToOtherSide(indexes, subtractOnBothSides) {
     const nodeSide = getSideOfEquaction(node);
     const otherSide = 1 - nodeSide;
     const existingSign = getCombinedSignOfTopLevelTerm(node);
-    const newSign = existingSign === 1 ? '-' : '+';
+    const count = removeUnaryMinusFactors(node, tree);
+    const newSign = count % 2 === 1
+        ? (existingSign === 1 ? '+' : '-')
+        : (existingSign === 1 ? '-' : '+');
     replaceNode(tree.content[otherSide], sideWithNewNode(tree, otherSide, node, newSign));
     if (subtractOnBothSides) {
         replaceNode(tree.content[nodeSide], sideWithNewNode(tree, nodeSide, node, newSign));
@@ -104,6 +107,26 @@ function moveTermToOtherSide(indexes, subtractOnBothSides) {
     doSimplifications(tree);
     model.mathText = toString(tree);
     resetAndUpdateView();
+}
+
+function removeUnaryMinusFactors(node, tree) {
+    let count = 0;
+    if (node.value !== undefined || node.operator !== '*') return 0;
+    if (isUnaryMinus(node.content[0])) {
+        replaceNode(node.content[0], node.content[0].content[0]);
+        addParentAndId(tree);
+        count++;
+    } else {
+        count += removeUnaryMinusFactors(node.content[0], tree);
+    }
+    if (isUnaryMinus(node.content[1])) {
+        replaceNode(node.content[1], node.content[1].content[0]);
+        addParentAndId(tree);
+        count++;
+    } else {
+        count += removeUnaryMinusFactors(node.content[1], tree);
+    }
+    return count;
 }
 
 function sideWithNewNode(tree, side, node, sign) {
@@ -288,7 +311,7 @@ function replaceProductsOfOne(node) {
 
 function removeUnariesInSecondPositionSubtraction(node) {
     if (node.value !== undefined) return false;
-    if (node.operator === '-' && node.content.length == 2 && isUnaryMinus(node.content[1])){
+    if (node.operator === '-' && node.content.length == 2 && isUnaryMinus(node.content[1])) {
         node.operator = '+';
         node.content[1] = node.content[1].content[0];
         return true;

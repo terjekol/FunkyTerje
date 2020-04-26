@@ -31,7 +31,7 @@ const model = {
             icon: '↷\n=',
             description: 'Flytte ledd til den andre siden av ligningen',
             levels: {
-                first: 3,
+                first: 4,
             }
         },
         divideBothSides: {
@@ -39,7 +39,7 @@ const model = {
             icon: '|÷',
             description: 'Dele begge sider av ligningen',
             levels: {
-                first: 4,
+                first: 5,
             }
         },
         reduceFraction: {

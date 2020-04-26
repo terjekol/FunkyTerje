@@ -11,7 +11,7 @@ QUnit.test("move term - -5*x+3=6-6*x", function (assert) {
 
 QUnit.test("move term - 0=-6*x-2", function (assert) {
     // []=([0]0,[1]-([10]*([100]-([1000]6),[101]x),[11]2))
-    testMoveTerm('0=-6*x-2', '10', '-5*x+3+6*x=-2', assert);
+    testMoveTerm('0=-6*x-2', '10', '6*x=-2', assert);
 });
 
 QUnit.test("doSimplifications", function (assert) {

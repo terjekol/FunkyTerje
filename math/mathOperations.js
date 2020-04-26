@@ -93,7 +93,8 @@ function moveTermToOtherSide(indexes, subtractOnBothSides) {
     const nodeSide = getSideOfEquaction(node);
     const otherSide = 1 - nodeSide;
     const existingSign = getCombinedSignOfTopLevelTerm(node);
-    const count = removeUnaryMinusFactors(node, tree);
+    let count = 0;
+    while (removeUnaryMinusFactors(node, tree)) count++;
     const newSign = count % 2 === 1
         ? (existingSign === 1 ? '+' : '-')
         : (existingSign === 1 ? '-' : '+');
@@ -109,24 +110,21 @@ function moveTermToOtherSide(indexes, subtractOnBothSides) {
     resetAndUpdateView();
 }
 
-function removeUnaryMinusFactors(node, tree) {
-    let count = 0;
-    if (node.value !== undefined || node.operator !== '*') return 0;
+function removeUnaryMinusFactors(node) {
+    if (node.value !== undefined || node.operator !== '*') return false;
     if (isUnaryMinus(node.content[0])) {
         replaceNode(node.content[0], node.content[0].content[0]);
-        addParentAndId(tree);
-        count++;
+        return true;
     } else {
-        count += removeUnaryMinusFactors(node.content[0], tree);
+        if (removeUnaryMinusFactors(node.content[0])) return true;
     }
     if (isUnaryMinus(node.content[1])) {
         replaceNode(node.content[1], node.content[1].content[0]);
-        addParentAndId(tree);
-        count++;
+        return true;
     } else {
-        count += removeUnaryMinusFactors(node.content[1], tree);
+        if (removeUnaryMinusFactors(node.content[1])) return true;
     }
-    return count;
+    return false;
 }
 
 function sideWithNewNode(tree, side, node, sign) {
@@ -263,8 +261,10 @@ function doSimplifications(node) {
 
 function removeTermsZero(node) {
     if (isNumber(node) && node.value === '0' && '+-'.includes(parentOperator(node))) {
-        if (isUnaryMinus(node.parent) || indexWithParent(node) === 0 && parentOperator(node) === '-') {
+        if (isUnaryMinus(node.parent)) {
             removeNode(node.parent);
+        } else if(indexWithParent(node) === 0 && parentOperator(node) === '-') {
+            removeNode(node);
         } else {
             replaceNode(node.parent, siblingNode(node));
         }

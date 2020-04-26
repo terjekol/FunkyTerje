@@ -12,7 +12,20 @@ const levelExerciseFunctions = [
     // 5 - + dele + forkorte
     createEquationWithNoNeedForPrimeFactorization,
     // 6 - primtallsfaktorisere
+    createEquationWithNeedForPrimeFactorization,
 ];
+
+function createEquationWithNeedForPrimeFactorization() {
+    // ax=b
+    const commonFactorCount = randomNumberFromRange(1, 4);
+    const commonFactors = range(0, commonFactorCount).map(() => randomPrime());
+    const product = commonFactors.reduce((value, total) => total * value, 1);
+    const a = product * randomPrime();
+    const b = product * randomFromArray([2, 3, 5, 7].filter(n => n !== a));
+    const [a1, a2] = splitNumberInTwoRandomParts(a);
+    const [b1, b2] = splitNumberInTwoRandomParts(b);
+    return equationAxBequalsCxD(a1, -b1, -a2, b2);
+}
 
 function createEquationWithNoNeedForPrimeFactorization() {
     // ax=b, hvor a og b er forskjellige primtall
@@ -20,11 +33,10 @@ function createEquationWithNoNeedForPrimeFactorization() {
     const b = randomFromArray([2, 3, 5, 7].filter(n => n !== a));
     const [a1, a2] = splitNumberInTwoRandomParts(a);
     const [b1, b2] = splitNumberInTwoRandomParts(b);
-    const eq = equationAxBequalsCxD(a1, -b1, -a2, b2);
-    return eq;
+    return equationAxBequalsCxD(a1, -b1, -a2, b2);
 }
 
-function equationAxBequalsCxD(a, b, c, d){
+function equationAxBequalsCxD(a, b, c, d) {
     return randomOrderSum(a, b) + '=' + randomOrderSum(c, d);
 }
 

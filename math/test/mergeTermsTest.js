@@ -110,14 +110,14 @@ QUnit.test("merge x-terms - x=-3*x+(-5*x)", function (assert) {
     testMergeTerms('x=-3*x+(-5*x)', '10', '11', 'x=-8*x', assert);
 });
 
-QUnit.test("merge x-terms - x=-3*x+(-(5*x))", function (assert) {
+QUnit.test("merge x-terms - x=-3*x+(-(5*x)) A", function (assert) {
     // []=([0]x,[1]+([10]*([100]-([1000]3),[101]x),[11]-([110]*([1100]5,[1101]x))))
     testMergeTerms('x=-3*x+(-(5*x))', '10', '11', 'x=-8*x', assert);
 });
 
-QUnit.test("merge x-terms - x=-3*x+(-(5*x))", function (assert) {
+QUnit.test("merge x-terms - x=-3*x+(-(5*x)) B", function (assert) {
     // []=([0]x,[1]+([10]*([100]-([1000]3),[101]x),[11]-([110]*([1100]5,[1101]x))))
-    testMergeTerms('x=-3*x+(-(5*x))', '10', '110', 'x=-8*x', assert);
+    testMergeTerms('x=-3*x+(-(5*x))', '10', '11', 'x=-8*x', assert);
 });
 
 QUnit.test("merge x-terms - x=x+x", function (assert) {

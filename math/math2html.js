@@ -74,7 +74,8 @@ function isFactorInDivision(node, lookInNumerator) {
     const isPrimitiveOrNotProduct = !node.operator || node.operator !== '*';
     if (isNumeratorOrDenominator(node, lookInNumerator)) return isPrimitiveOrNotProduct;
     const product = getTopLevelProductOfFactor(node);
-    return isNumeratorOrDenominator(product, lookInNumerator);
+    return (node.value !== undefined || node.operator !== '*')
+        && isNumeratorOrDenominator(product, lookInNumerator);
 }
 
 function isNumeratorOrDenominator(node, numerator) {

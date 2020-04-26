@@ -9,7 +9,29 @@ const levelExerciseFunctions = [
     createEquationWithXTermsWithDiffOfOne,
     // 4 - flytte ledd istedenfor trekke fra på begge sider
     createEquationWithXTermsWithDiffOfOne,
+    // 5 - + dele + forkorte
+    createEquationWithNoNeedForPrimeFactorization,
+    // 6 - primtallsfaktorisere
 ];
+
+function createEquationWithNoNeedForPrimeFactorization() {
+    // ax=b, hvor a og b er forskjellige primtall
+    const a = randomPrime();
+    const b = randomFromArray([2, 3, 5, 7].filter(n => n !== a));
+    const [a1, a2] = splitNumberInTwoRandomParts(a);
+    const [b1, b2] = splitNumberInTwoRandomParts(b);
+    const eq = equationAxBequalsCxD(a1, -b1, -a2, b2);
+    return eq;
+}
+
+function equationAxBequalsCxD(a, b, c, d){
+    return randomOrderSum(a, b) + '=' + randomOrderSum(c, d);
+}
+
+function splitNumberInTwoRandomParts(n) {
+    const term = numberWithRandomSign(randomNumber());
+    return [term, n - term];
+}
 
 function createEquationWithXTermsWithDiffOfOne() {
     const x1abs = randomNumberFromRange(2, 8);
@@ -20,7 +42,11 @@ function createEquationWithXTermsWithDiffOfOne() {
     const c2abs = randomNumber();
     const c1 = randomBool() ? c1abs : -1 * c1abs;
     const c2 = c1 > 0 ? c2abs : -1 * c2abs;
-    return randomOrderSum(x1, c1) + '=' + randomOrderSum(x2, c2);
+    return equationAxBequalsCxD(x1, c1, x2, c2);
+}
+
+function numberWithRandomSign(number) {
+    return randomBool() ? number : -1 * number;
 }
 
 function randomOrderSum(x, c) {
@@ -58,6 +84,10 @@ function randomNumber() {
 
 function randomPrime() {
     return [2, 3, 5, 7][randomNumberFromRange(0, 3)]
+}
+
+function randomFromArray(array) {
+    return array[randomNumberFromRange(0, array.length)];
 }
 
 function randomFlipOrNot(equation) {

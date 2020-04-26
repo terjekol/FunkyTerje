@@ -69,7 +69,7 @@ function findLowestFactor(number, factor) {
 
 function primeFactorizeImpl(number) {
     const factor = findLowestFactor(number, 2);
-    if (factor === number) return number;
+    if (factor === number) return '' + number;
     return factor + '*' + primeFactorizeImpl(number / factor);
 }
 
@@ -263,7 +263,7 @@ function removeTermsZero(node) {
     if (isNumber(node) && node.value === '0' && '+-'.includes(parentOperator(node))) {
         if (isUnaryMinus(node.parent)) {
             removeNode(node.parent);
-        } else if(indexWithParent(node) === 0 && parentOperator(node) === '-') {
+        } else if (indexWithParent(node) === 0 && parentOperator(node) === '-') {
             removeNode(node);
         } else {
             replaceNode(node.parent, siblingNode(node));

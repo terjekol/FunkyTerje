@@ -289,7 +289,7 @@ function replaceProductsOfOne(node) {
 function removeUnariesInSecondPositionSubtraction(node) {
     if (node.value !== undefined) return false;
     if (node.operator === '-' && node.content.length == 2 && isUnaryMinus(node.content[1])){
-        node.operator === '+';
+        node.operator = '+';
         node.content[1] = node.content[1].content[0];
         return true;
     }

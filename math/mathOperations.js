@@ -106,7 +106,7 @@ function moveTermToOtherSide(indexes, subtractOnBothSides) {
     resetAndUpdateView();
 }
 
-function sideWithNewNode(tree, side, node, sign){
+function sideWithNewNode(tree, side, node, sign) {
     const newNodeContent = [tree.content[side], node].map(cloneNode);
     return makeNode(sign, newNodeContent);
 }
@@ -232,7 +232,8 @@ function numberOrUnaryMinusNumberValue(node) {
 
 function doSimplifications(node) {
     while (replaceProductsOfOne(node));
-    removeUnariesInUnaries(node);
+    while (removeUnariesInUnaries(node));
+    while (removeUnariesInSecondPositionSubtraction(node));
     while (replaceDivideByOne(node));
     while (removeTermsZero(node));
 }
@@ -285,16 +286,29 @@ function replaceProductsOfOne(node) {
     return false;
 }
 
+function removeUnariesInSecondPositionSubtraction(node) {
+    if (node.value !== undefined) return false;
+    if (node.operator === '-' && node.content.length == 2 && isUnaryMinus(node.content[1])){
+        node.operator === '+';
+        node.content[1] = node.content[1].content[0];
+        return true;
+    }
+    if (removeUnariesInSecondPositionSubtraction(node.content[0])) return true;
+    if (node.content.length === 2 && removeUnariesInSecondPositionSubtraction(node.content[1])) return true;
+    return false;
+}
+
 function removeUnariesInUnaries(node) {
-    if (node.value !== undefined) return;
+    if (node.value !== undefined) return false;
     if (isUnaryMinus(node) && isUnaryMinus(node.content[0])) {
         const newNode = node.content[0].content[0];
         replaceNode(node, newNode);
         removeUnariesInUnaries(newNode);
-        return;
+        return true;
     }
-    removeUnariesInUnaries(node.content[0]);
-    if (node.content.length === 2) removeUnariesInUnaries(node.content[1]);
+    if (removeUnariesInUnaries(node.content[0])) return true;
+    if (node.content.length === 2 && removeUnariesInUnaries(node.content[1])) return true;
+    return false;
 }
 
 function mergeConstantAndConstant(selectedNode1, selectedNode2) {

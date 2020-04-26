@@ -2,7 +2,7 @@ function selectMath(functionName) {
     model.errorMessage = '';
     model.onGoingMathOperation = {
         name: functionName,
-        arguments: [],        
+        arguments: [],
     };
     selectMathImpl();
 }
@@ -15,7 +15,7 @@ function selectMathImpl() {
         console.error('unknown function ' + functionName);
         return;
     }
-    operation.steps = selectedFunction.steps.map(step=>model.steps[step]);
+    operation.steps = selectedFunction.steps.map(step => model.steps[step]);
     const stepIndex = model.onGoingMathOperation.arguments.length;
     const step = selectedFunction.steps[stepIndex];
     model.onGoingMathOperation.step = step;
@@ -74,31 +74,41 @@ function primeFactorizeImpl(number) {
 }
 
 function subtractTermOnBothSides(indexes) {
-    const tree = parseMathText(model.mathText);
-    const selectedNode = nodeFromIndexes(indexes, tree);
-    const newTree = makeNode('=', [
-        makeNode('-', [tree.content[0], cloneNode(selectedNode)]),
-        makeNode('-', [tree.content[1], cloneNode(selectedNode)]),
-    ]);
-    model.mathText = toString(newTree);
-    resetAndUpdateView();
+    moveTermToOtherSide(indexes, true);
+    // const tree = parseMathText(model.mathText);
+    // const selectedNode = nodeFromIndexes(indexes, tree);
+    // const existingSign = getCombinedSignOfTopLevelTerm(node);
+    // const newTree = makeNode('=', [
+    //     makeNode('-', [tree.content[0], cloneNode(selectedNode)]),
+    //     makeNode('-', [tree.content[1], cloneNode(selectedNode)]),
+    // ]);
+    // model.mathText = toString(newTree);
+    // doSimplifications();
+    // resetAndUpdateView();
 }
 
-function moveTermToOtherSide(indexes) {
+function moveTermToOtherSide(indexes, subtractOnBothSides) {
     const tree = parseMathText(model.mathText);
     const node = nodeFromIndexes(indexes, tree);
     const nodeSide = getSideOfEquaction(node);
     const otherSide = 1 - nodeSide;
-    const newNodeContent = [tree.content[otherSide], node].map(cloneNode);
     const existingSign = getCombinedSignOfTopLevelTerm(node);
     const newSign = existingSign === 1 ? '-' : '+';
-    const newNode = makeNode(newSign, newNodeContent);
-    replaceNode(tree.content[otherSide], newNode);
-    replaceNode(node, { value: '0' });
+    replaceNode(tree.content[otherSide], sideWithNewNode(tree, otherSide, node, newSign));
+    if (subtractOnBothSides) {
+        replaceNode(tree.content[nodeSide], sideWithNewNode(tree, nodeSide, node, newSign));
+    } else {
+        replaceNode(node, { value: '0' });
+    }
     addParentAndId(tree);
     doSimplifications(tree);
     model.mathText = toString(tree);
     resetAndUpdateView();
+}
+
+function sideWithNewNode(tree, side, node, sign){
+    const newNodeContent = [tree.content[side], node].map(cloneNode);
+    return makeNode(sign, newNodeContent);
 }
 
 function getSideOfEquaction(node) {

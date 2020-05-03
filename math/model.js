@@ -1,5 +1,5 @@
 const model = {
-    level: 0,
+    level: 1,
     mathText: null,
     steps: {
         selectOneTerm: 'Velg et ledd.',

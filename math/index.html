@@ -26,6 +26,9 @@
 
         function updateView() {
             document.getElementById('app').innerHTML = `
+                <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
+                <div id="txt">${getText()}</div>
+                <div id="menuBar">${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}</div>
                 <div id="menu">         
                     <div class="levels">
                         <h3>Oppgaver:</h3>
@@ -43,9 +46,6 @@
                         ${createLevelsMenuHtml()}
                     </div>                    
                 </div>
-                <div id="txt">${getText()}</div>
-                <div id="menuBar">${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}</div>
-                <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
             `;
         }
 

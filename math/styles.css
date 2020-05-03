@@ -4,15 +4,20 @@ body {
 }
 
 #app {
-  height: 100vh;
-  display: grid;
+  /* height: 100vh; */
+  /* width: 100vw; */
+  padding: 0 4vmin;
+  display: flex;
+  flex-direction: column;
+  /* justify-content: space-between; */
+  /* display: grid;
   grid-template-columns: auto;
-  grid-template-rows: 20% 20% 40% 20%;
+  grid-template-rows: 12vmin 6vmin 24vmin 12vmin;
   grid-template-areas:
     'txt'
     'menuBar'
     'mathContent'
-    'menu';
+    'menu'; */
 }
 
 #txt {
@@ -23,12 +28,10 @@ body {
 
 #content {
   grid-area: content;
-  padding: 1vmin;
 }
 
 #menu {
   grid-area: menu;
-  padding: 1vmin;
   display: grid;
   grid-template-columns: 20vmin auto;
   grid-template-rows: 1fr 1fr;
@@ -36,11 +39,10 @@ body {
 
 #mathContent {
   grid-area: mathContent;
-  padding: 1vmin;
 }
+
 #menuBar {
   grid-area: menuBar;
-  padding: 1vmi;
   display: flex;
 }
 

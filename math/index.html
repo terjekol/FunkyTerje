@@ -26,13 +26,16 @@
 
         function updateView() {
             document.getElementById('app').innerHTML = `
-                <div id="mathContent" class="math">${createMathText(model.mathText, getStep())}</div>            
-                <div id="txt">${getText()}</div>
-                <div id="menuBar">${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}</div>
-                <div id="menu">         
-                    <div class="levels">
-                        <h3>Oppgaver:</h3>
+                <div id="mathContent" class="math mainPart">${createMathText(model.mathText, getStep())}</div>            
+              
+                <div class="mainPart">
+                    <div id="txt">${getText()}</div>
+                    <div id="menuBar">
+                        ${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}
                     </div>
+                </div>
+
+                <div class="mainPart">         
                     <div class="levels" >
                         <button class="excercise"  onclick="newExercise()"">Ny nivå ${model.level}-oppgave</button>
                         <div style="width: 40px"></div>
@@ -40,9 +43,7 @@
                         <button class="excercise" onclick="newCustomExercise()">Ny egen oppgave</button>
                     </div>
                     <div class="levels">
-                        <h3>Nivåer:</h3>
-                    </div>
-                    <div class="levels">
+                        Nivåer:
                         ${createLevelsMenuHtml()}
                     </div>                    
                 </div>
@@ -118,9 +119,9 @@
         }
 
         function createMessage() {
-            return model.mathText && isEquationSolved(model.mathText)
-                ? 'Ligningen er løst.'
-                : 'Velg hvilken matematisk operasjon du vil bruke.';
+            return model.mathText && isEquationSolved(model.mathText) ? 'Ligningen er løst.' :
+                model.level === 0 ? '' :
+                    'Velg hvilken matematisk operasjon du vil bruke.';
         }
 
         function isEquationSolved(mathText) {

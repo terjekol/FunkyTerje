@@ -21,28 +21,23 @@ body {
 }
 
 #txt {
-  grid-area: txt;
   font-size: 3vmin;
   color: rgb(156, 220, 254);
 }
 
 #content {
-  grid-area: content;
 }
 
 #menu {
-  grid-area: menu;
   display: grid;
   grid-template-columns: 20vmin auto;
   grid-template-rows: 1fr 1fr;
 }
 
 #mathContent {
-  grid-area: mathContent;
 }
 
 #menuBar {
-  grid-area: menuBar;
   display: flex;
 }
 
@@ -78,6 +73,10 @@ button.display {
   color: rgb(214, 80, 27);
 }
 
+div.mainPart {
+  margin-bottom: 3vmin;
+}
+
 div.selectedFunction {
   display: flex;
   align-items: center;
@@ -93,6 +92,8 @@ div.math {
   font-size: 14vmin;
   user-select: none;
   color: rgb(220, 220, 170);
+  margin: 0;
+  padding: 0;
 }
 
 div.flex {
@@ -127,6 +128,7 @@ div.levels {
   flex-direction: row;
   color: rgb(156, 220, 254);  
   align-items: center;
+  font-size: 3vmin;
 }
 
 div.stretch{
@@ -154,4 +156,5 @@ button.excercise {
 
 input{
   height: 3vmin;
+  width: 30vmin;
 }

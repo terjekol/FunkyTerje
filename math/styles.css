@@ -7,7 +7,7 @@ body {
   height: 100vh;
   display: grid;
   grid-template-columns: auto;
-  grid-template-rows: 140px 100px auto 160px;
+  grid-template-rows: 20% 20% 40% 20%;
   grid-template-areas:
     'txt'
     'menuBar'
@@ -17,30 +17,30 @@ body {
 
 #txt {
   grid-area: txt;
-  font-size: 18pt;
+  font-size: 3vmin;
   color: rgb(156, 220, 254);
 }
 
 #content {
   grid-area: content;
-  padding: 6px;
+  padding: 1vmin;
 }
 
 #menu {
   grid-area: menu;
-  padding: 6px;
+  padding: 1vmin;
   display: grid;
-  grid-template-columns: 140px auto;
+  grid-template-columns: 20vmin auto;
   grid-template-rows: 1fr 1fr;
 }
 
 #mathContent {
   grid-area: mathContent;
-  padding: 6px;
+  padding: 1vmin;
 }
 #menuBar {
   grid-area: menuBar;
-  padding: 6px;
+  padding: 1vmi;
   display: flex;
 }
 
@@ -51,11 +51,11 @@ body {
 }
 
 button {
-  width: 70px;
-  height: 70px;
-  font-size: 20pt;
-  line-height: 0.6em;
-  margin: 5px;
+  width: 10vmin;
+  height: 10vmin;
+  font-size: 3vmin;
+  line-height: 1.8vmin;
+  margin: 1vmin;
   text-align: center;
   background-color: rgb(60, 60, 60);
   color: rgb(206, 145, 120);
@@ -66,9 +66,10 @@ button.ongoing {
 }
 
 button.display {
-  width: 40px;
-  height: 40px;
-  font-size: 12pt;
+  width: 5vmin;
+  height: 5vmin;
+  font-size: 1.5vmin;
+  line-height: 0.9vmin;
 }
 
 .error {
@@ -87,7 +88,7 @@ div.function {
 }
 
 div.math {
-  font-size: 80pt;
+  font-size: 14vmin;
   user-select: none;
   color: rgb(220, 220, 170);
 }
@@ -95,7 +96,7 @@ div.math {
 div.flex {
   display: flex;
   align-items: center;
-  padding: 2px;
+  padding: 0.5vmin;
 }
 
 div.vertical {
@@ -103,16 +104,16 @@ div.vertical {
 }
 
 div.fraction {
-  border-bottom: 9px solid rgb(220, 220, 170);
-  height: 0px;
+  border-bottom: 1vmin solid rgb(220, 220, 170);
+  height: 0;
   width: 100%;
 }
 
 div.highlight {
-  border: 1px solid gray;
-  border-radius: 5px;
-  margin-left: 4px;
-  margin-right: 4px;
+  border: 0.5vmin solid gray;
+  border-radius: 2.5vmin;
+  margin-left: 1vmin;
+  margin-right: 1vmin;
 }
 
 li.passive {
@@ -131,24 +132,24 @@ div.stretch{
 }
 
 button.level {
-  height: 40px;
+  height: 5vmin;
   color: rgb(156, 220, 254);
-  font-size: 12pt;
+  font-size: 2.5vmin;
 }
 
 button.selectedLevel {
-  font-size: 18pt;
+  font-size: 3vmin;
   background-color: rgb(0, 122, 204);
   color: rgb(242, 248, 252);
 }
 
 button.excercise {
-  height: 40px;
+  height: 5vmin;
   width: auto;
   color: rgb(156, 220, 254);
-  font-size: 12pt;
+  font-size: 2.5vmin;
 }
 
 input{
-  height: 20pt;
+  height: 3vmin;
 }

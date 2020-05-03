@@ -1,6 +1,7 @@
 body {
   padding: 0;
   margin: 0;
+  min-height: 100%;
 }
 
 #app {
@@ -23,12 +24,6 @@ body {
 #txt {
   font-size: 3vmin;
   color: rgb(156, 220, 254);
-}
-
-#menu {
-  display: grid;
-  grid-template-columns: 20vmin auto;
-  grid-template-rows: 1fr 1fr;
 }
 
 #menuBar {
@@ -68,7 +63,6 @@ button.display {
 }
 
 div.mainPart {
-  margin-bottom: 3vmin;
   padding: 0 3vmin;
 }
 
@@ -84,8 +78,11 @@ div.function {
 }
 
 div.panel{
-  margin-top: auto;
   background-color: rgb(51, 51, 51);
+}
+
+div.footer{
+  margin-top: auto;
 }
 
 div.math {
@@ -129,10 +126,6 @@ div.levels {
   color: rgb(156, 220, 254);  
   align-items: center;
   font-size: 3vmin;
-}
-
-div.stretch{
-  justify-content: space-between;
 }
 
 button.level {

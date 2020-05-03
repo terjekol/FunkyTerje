@@ -4,9 +4,9 @@ body {
 }
 
 #app {
-  /* height: 100vh; */
+  height: 100vh;
   /* width: 100vw; */
-  padding: 0 4vmin;
+  /* padding: 0 4vmin; */
   display: flex;
   flex-direction: column;
   /* justify-content: space-between; */
@@ -25,16 +25,10 @@ body {
   color: rgb(156, 220, 254);
 }
 
-#content {
-}
-
 #menu {
   display: grid;
   grid-template-columns: 20vmin auto;
   grid-template-rows: 1fr 1fr;
-}
-
-#mathContent {
 }
 
 #menuBar {
@@ -75,6 +69,7 @@ button.display {
 
 div.mainPart {
   margin-bottom: 3vmin;
+  padding: 0 3vmin;
 }
 
 div.selectedFunction {
@@ -86,6 +81,11 @@ div.function {
   color: rgb(206, 145, 120);
   vertical-align: middle;
   height: 100%;
+}
+
+div.panel{
+  margin-top: auto;
+  background-color: rgb(51, 51, 51);
 }
 
 div.math {

@@ -26,16 +26,18 @@
 
         function updateView() {
             document.getElementById('app').innerHTML = `
-                <div id="mathContent" class="math mainPart">${createMathText(model.mathText, getStep())}</div>            
+                <div id="mathContent" class="math mainPart">
+                    ${createMathText(model.mathText, getStep())}
+                </div>            
               
-                <div class="mainPart">
+                <div class="mainPart panel">
                     <div id="txt">${getText()}</div>
                     <div id="menuBar">
                         ${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}
                     </div>
                 </div>
 
-                <div class="mainPart">         
+                <div class="mainPart panel">         
                     <div class="levels" >
                         <button class="excercise"  onclick="newExercise()"">Ny nivå ${model.level}-oppgave</button>
                         <div style="width: 40px"></div>

@@ -1,7 +1,10 @@
 const model = {
     level: 1,
     mathText: null,
-    history: [],    
+    history: {
+        items: [],
+        index: 0,
+    },    
     steps: {
         selectOneTerm: 'Velg et ledd.',
         selectFactorInNumerator: 'Velg en faktor i telleren.',

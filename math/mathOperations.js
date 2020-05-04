@@ -19,23 +19,52 @@ function selectMathImpl() {
     const stepIndex = model.onGoingMathOperation.arguments.length;
     const step = selectedFunction.steps[stepIndex];
     model.onGoingMathOperation.step = step;
+    if (operation.steps.length === 0) doMath();
     updateView();
 }
 
 function doMath(arg) {
     const operation = model.onGoingMathOperation;
     const args = operation.arguments;
-    if(args.length === 0 && ['mergeTerms','reduceFraction' ].includes(operation.name)){
+    if (args.length === 0 && ['mergeTerms', 'reduceFraction'].includes(operation.name)) {
         nextStep(arg);
         return;
     }
     args.push(arg);
     const func = eval(operation.name);
-    if(!isFunction(func)){
+    if (!isFunction(func)) {
         console.error('unknown operation: ' + model.onGoingMathOperation.name);
         return;
     }
     func(...args);
+    if (['undo', 'redo'].includes(operation.name)) {
+        resetAndUpdateView();
+        return;
+    }
+
+    const history = model.history.items;
+    const index = model.history.index;
+    if (index >= history.length) {
+        history.splice(index + 1);
+    }
+    history.push(model.mathText);
+    model.history.index++;
+    resetAndUpdateView();
+}
+
+function undo() {
+    const history = model.history.items;
+    if (history.length === 0) return;
+    model.history.index--;
+    model.mathText = history[model.history.index];
+}
+
+function redo() {
+    const history = model.history.items;
+    const index = model.history.index;
+    if (index + 1 >= history.length) return;
+    model.history.index++;
+    model.mathText = history[model.history.index];
 }
 
 function nextStep(arg) {
@@ -54,7 +83,6 @@ function primeFactorize(indexes) {
     const product = parseMathText(primeFactors);
     replaceNode(node, product);
     model.mathText = toString(tree);
-    resetAndUpdateView();
 }
 
 function findLowestFactor(number, factor) {
@@ -91,7 +119,6 @@ function moveTermToOtherSide(indexes, subtractOnBothSides) {
     addParentAndId(tree);
     doSimplifications(tree);
     model.mathText = toString(tree);
-    resetAndUpdateView();
 }
 
 function removeUnaryMinusFactors(node) {
@@ -153,7 +180,6 @@ function mergeTerms(indexes1, indexes2) {
     addParentAndId(tree);
     doSimplifications(tree);
     model.mathText = toString(tree);
-    resetAndUpdateView();
 }
 
 function replaceLetterWithProductOfOne(node) {
@@ -461,7 +487,6 @@ function reduceFraction(indexes1, indexes2) {
     addParentAndId(tree);
     doSimplifications(tree);
     model.mathText = toString(tree);
-    resetAndUpdateView();
 }
 
 function divideBothSides(indexes) {
@@ -470,10 +495,9 @@ function divideBothSides(indexes) {
     replaceNode(tree.content[0], makeNode('/', [tree.content[0], cloneNode(node)]));
     replaceNode(tree.content[1], makeNode('/', [tree.content[1], cloneNode(node)]));
     model.mathText = toString(tree);
-    resetAndUpdateView();
 }
 
-function resetAndUpdateView(indexes) {
+function resetAndUpdateView() {
     model.onGoingMathOperation = null;
     updateView();
 }

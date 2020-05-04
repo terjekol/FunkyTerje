@@ -21,8 +21,7 @@
     <script>
         // model.mathText = 'x+1/(x+2)=5';
         //model.mathText = 'x=1+(-2)-3';
-        model.mathText = '9*x-8=7*x+6';
-        updateView();
+        newExerciseImpl('9*x-8=7*x+6');
 
         function updateView() {
             document.getElementById('app').innerHTML = `
@@ -54,16 +53,22 @@
 
         function newExercise() {
             const fn = levelExerciseFunctions[model.level];
-            model.mathText = fn();
-            updateView();
+            newExerciseImpl(fn());
         }
 
         function newCustomExercise() {
             model.errorMessage = '';
             let result = null;
             try { result = parseMathText(model.ownExercise); } catch (error) { }
-            if (result !== null) model.mathText = model.ownExercise;
+            if (result !== null) newExerciseImpl(model.ownExercise);
             else model.errorMessage = `Kan ikke tolke uttrykket <tt>${model.ownExercise}</tt>`;
+        }
+
+        function newExerciseImpl(exercise) {
+            model.mathText = exercise;
+            model.history.items.length = 0;
+            model.history.items.push(exercise);
+            model.history.index = 0;
             updateView();
         }
 

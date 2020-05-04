@@ -25,31 +25,17 @@ function selectMathImpl() {
 function doMath(arg) {
     const operation = model.onGoingMathOperation;
     const args = operation.arguments;
-    if (operation.name === 'subtractTermOnBothSides') {
-        subtractTermOnBothSides(arg);
-    } else if (operation.name === 'moveTermToOtherSide') {
-        moveTermToOtherSide(arg);
-    } else if (operation.name === 'mergeTerms') {
-        if (args.length === 0) {
-            nextStep(arg);
-            return;
-        } else {
-            mergeTerms(args[0], arg);
-        }
-    } else if (operation.name === 'reduceFraction') {
-        if (args.length === 0) {
-            nextStep(arg);
-            return;
-        } else {
-            reduceFraction(args[0], arg);
-        }
-    } else if (operation.name === 'divideBothSides') {
-        divideBothSides(arg);
-    } else if (operation.name === 'primeFactorize') {
-        primeFactorize(arg);
-    } else {
-        console.error('unknown operation: ' + model.onGoingMathOperation.name);
+    if(args.length === 0 && ['mergeTerms','reduceFraction' ].includes(operation.name)){
+        nextStep(arg);
+        return;
     }
+    args.push(arg);
+    const func = eval(operation.name);
+    if(!isFunction(func)){
+        console.error('unknown operation: ' + model.onGoingMathOperation.name);
+        return;
+    }
+    func(...args);
 }
 
 function nextStep(arg) {

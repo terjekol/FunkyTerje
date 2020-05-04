@@ -68,3 +68,6 @@ function range(min, max) {
     return Array.from(Array(count).keys()).map(n => n + min);
 }
 
+function isFunction(functionToCheck) {
+    return functionToCheck && {}.toString.call(functionToCheck) === '[object Function]';
+}

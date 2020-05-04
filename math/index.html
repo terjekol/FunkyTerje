@@ -123,7 +123,7 @@
         function createMessage() {
             return model.mathText && isEquationSolved(model.mathText) ? 'Ligningen er løst.' :
                 model.level === 0 ? '' :
-                    'Velg hvilken matematisk operasjon du vil bruke.';
+                    'Velg operasjon:';
         }
 
         function isEquationSolved(mathText) {

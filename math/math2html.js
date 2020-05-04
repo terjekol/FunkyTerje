@@ -14,7 +14,9 @@ function isOperationAvailable(operationName) {
 
 function getIcon(f) {
     if (f === 'error') return '⚠';
-    return model.mathOperations[f].icon
+    const icon = model.mathOperations[f].icon;
+    if (icon[0] === '^') return `<span style="font-size: 160%">${icon.substring(1)}</span>`;
+    return icon
         .replace(/\n/g, '<br/>')
         .replace(/ /g, '&nbsp;');
 }

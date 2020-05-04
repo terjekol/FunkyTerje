@@ -30,11 +30,19 @@ function doMath(arg) {
     } else if (operation.name === 'moveTermToOtherSide') {
         moveTermToOtherSide(arg);
     } else if (operation.name === 'mergeTerms') {
-        if (args.length === 0) nextStep(arg);
-        else mergeTerms(args[0], arg);
+        if (args.length === 0) {
+            nextStep(arg);
+            return;
+        } else {
+            mergeTerms(args[0], arg);
+        }
     } else if (operation.name === 'reduceFraction') {
-        if (args.length === 0) nextStep(arg);
-        else reduceFraction(args[0], arg);
+        if (args.length === 0) {
+            nextStep(arg);
+            return;
+        } else {
+            reduceFraction(args[0], arg);
+        }
     } else if (operation.name === 'divideBothSides') {
         divideBothSides(arg);
     } else if (operation.name === 'primeFactorize') {
@@ -75,16 +83,6 @@ function primeFactorizeImpl(number) {
 
 function subtractTermOnBothSides(indexes) {
     moveTermToOtherSide(indexes, true);
-    // const tree = parseMathText(model.mathText);
-    // const selectedNode = nodeFromIndexes(indexes, tree);
-    // const existingSign = getCombinedSignOfTopLevelTerm(node);
-    // const newTree = makeNode('=', [
-    //     makeNode('-', [tree.content[0], cloneNode(selectedNode)]),
-    //     makeNode('-', [tree.content[1], cloneNode(selectedNode)]),
-    // ]);
-    // model.mathText = toString(newTree);
-    // doSimplifications();
-    // resetAndUpdateView();
 }
 
 function moveTermToOtherSide(indexes, subtractOnBothSides) {
@@ -183,15 +181,10 @@ function mergeProductAndProduct(node1, node2) {
     if (!productsExceptFromFirstConstantsAreEqual(node1, node2)) {
         return finishWithError('Produktledd må være like, bortsett fra ev. første konstantfaktor, for å kunne slås sammen.');
     }
-    // const realFirstFactor = getFirstFactorInProduct(node1input);
-    // realFirstFactor.value = parseInt(firstFactor1.value) + parseInt(firstFactor2.value);
-    // removeNode(node2input);
     const factor1 = getFirstFactorInProduct(node1);
     const factor2 = getFirstFactorInProduct(node2);
     const value1 = numberOrUnaryMinusNumberValue(factor1) || 1;
     const value2 = numberOrUnaryMinusNumberValue(factor2) || 1;
-    // if (value1 === null) return; else removeNode(firstFactor1);
-    // if (value2 === null) return; else removeNode(firstFactor2);
     const constant1 = value1 * getCombinedSignOfTopLevelTerm(node1);
     const constant2 = value2 * getCombinedSignOfTopLevelTerm(node2);
     const newSum = constant1 + constant2;

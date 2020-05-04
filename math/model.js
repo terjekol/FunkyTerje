@@ -1,6 +1,7 @@
 const model = {
     level: 1,
     mathText: null,
+    history: [],    
     steps: {
         selectOneTerm: 'Velg et ledd.',
         selectFactorInNumerator: 'Velg en faktor i telleren.',
@@ -58,5 +59,21 @@ const model = {
                 first: 6,
             }
         },
+        undo: {
+            steps: [],
+            icon: '^⮪',
+            description: 'Angre',
+            levels: {
+                first: 0,
+            }
+        },
+        redo: {
+            steps: [],
+            icon: '^⮫',
+            description: 'Gjøre omigjen',
+            levels: {
+                first: 0,
+            }
+        },        
     },
 };

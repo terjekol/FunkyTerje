@@ -53,10 +53,11 @@ function doMath(arg) {
 }
 
 function undo() {
-    const history = model.history.items;
-    if (history.length === 0) return;
-    model.history.index--;
-    model.mathText = history[model.history.index];
+    const history = model.history;
+    const items = history.items;
+    if (items.length === 0 || history.index === 0) return;
+    history.index--;
+    model.mathText = items[history.index];
 }
 
 function redo() {

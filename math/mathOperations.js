@@ -44,7 +44,7 @@ function doMath(arg) {
 
     const history = model.history.items;
     const index = model.history.index;
-    if (index >= history.length) {
+    if (index < history.length) {
         history.splice(index + 1);
     }
     history.push(model.mathText);

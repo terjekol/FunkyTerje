@@ -6,19 +6,8 @@ body {
 
 #app {
   height: 100vh;
-  /* width: 100vw; */
-  /* padding: 0 4vmin; */
   display: flex;
   flex-direction: column;
-  /* justify-content: space-between; */
-  /* display: grid;
-  grid-template-columns: auto;
-  grid-template-rows: 12vmin 6vmin 24vmin 12vmin;
-  grid-template-areas:
-    'txt'
-    'menuBar'
-    'mathContent'
-    'menu'; */
 }
 
 #txt {
@@ -86,17 +75,31 @@ div.footer{
 }
 
 div.math {
-  font-size: 14vmin;
+  font-size: 12vmin;
   user-select: none;
   color: rgb(220, 220, 170);
   margin: 0;
   padding: 0;
 }
 
+div.history>div.math{
+  font-size: 2.4vmin;
+  height: 2.8vmin;
+  color: rgb(96, 96, 96);
+  padding-top: 1vmin;
+}
+
 div.flex {
   display: flex;
   align-items: center;
-  padding: 0.5vmin;
+  padding: 0.2vmin;
+}
+
+div.history div.flex {
+  justify-content: flex-start;
+  padding: 0;
+  margin: 0;
+  flex: none;
 }
 
 div.vertical {

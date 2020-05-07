@@ -1,6 +1,6 @@
 const model = {
-    level: 1,
-    mathText: null,
+    level: 4,
+    mathText: 'x+3=5',
     history: {
         items: [],
         index: 0,

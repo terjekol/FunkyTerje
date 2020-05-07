@@ -17,18 +17,21 @@
 <body>
     <div id="app">
     </div>
-
     <script>
-        // model.mathText = 'x+1/(x+2)=5';
-        //model.mathText = 'x=1+(-2)-3';
-        newExerciseImpl('9*x-8=7*x+6');
+        // newExerciseImpl('9*x-8=7*x+6');
+        newExercise();
 
         function updateView() {
             document.getElementById('app').innerHTML = `
+                <div class="mainPart history">
+                    ${createHistoryHtml(true)}
+                </div>
                 <div id="mathContent" class="math mainPart">
                     ${createMathText(model.mathText, getStep())}
                 </div>            
-              
+                <div class="mainPart history">
+                    ${createHistoryHtml(false)}
+                </div>              
                 <div class="mainPart panel">
                     <div id="txt">${getText()}</div>
                     <div id="menuBar">
@@ -49,6 +52,19 @@
                     </div>                    
                 </div>
             `;
+        }
+
+        function createHistoryHtml(isPreHistory) {
+            const history = model.history;
+            const index = history.index;
+            const allItems = history.items;
+            const limits = isPreHistory ? [0, index] : [index+1, allItems.length];
+            const items = model.history.items.slice(...limits);
+            return items.map(mathText => `
+                <div id="mathContent" class="math">
+                    ${createMathText(mathText, null)}
+                </div>  
+            `).join('');
         }
 
         function newExercise() {

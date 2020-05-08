@@ -1,4 +1,3 @@
-const 
 const model = {
     level: 4,
     mathText: 'x+3=5',

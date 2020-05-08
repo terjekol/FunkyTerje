@@ -1,0 +1,1 @@
+copy common.js+exercises.js+parser.js+math2html.js+mathOperations.js+model.js+main.js math.js

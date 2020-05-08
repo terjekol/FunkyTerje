@@ -1,4 +1,9 @@
-html, body {
+* {
+  font-family: 'Roboto', sans-serif;
+}
+
+html,
+body {
   padding: 0;
   margin: 0;
   height: 100%;
@@ -22,7 +27,6 @@ html, body {
 body {
   background-color: rgb(30, 30, 30);
   color: rgb(220, 184, 98);
-  font-family: Verdana, Helvetica, sans-serif;
 }
 
 button {
@@ -47,6 +51,7 @@ button.display {
   line-height: 0.9vmin;
 }
 
+
 .error {
   color: rgb(214, 80, 27);
 }
@@ -66,11 +71,11 @@ div.function {
   height: 100%;
 }
 
-div.panel{
+div.panel {
   background-color: rgb(51, 51, 51);
 }
 
-div.footer{
+div.footer {
   margin-top: auto;
 }
 
@@ -82,7 +87,7 @@ div.math {
   padding: 0;
 }
 
-div.history>div.math{
+div.history > div.math {
   font-size: 2.4vmin;
   height: 2.8vmin;
   color: rgb(128, 128, 128);
@@ -126,7 +131,7 @@ li.passive {
 div.levels {
   display: flex;
   flex-direction: row;
-  color: rgb(156, 220, 254);  
+  color: rgb(156, 220, 254);
   align-items: center;
   font-size: 3vmin;
 }
@@ -143,14 +148,15 @@ button.selectedLevel {
   color: rgb(242, 248, 252);
 }
 
-button.excercise {
-  height: 5vmin;
+button.exercise {
+  height: 8vmin;
   width: auto;
   color: rgb(156, 220, 254);
-  font-size: 2.5vmin;
+  font-size: 3vmin;
+  line-height: 1;
 }
 
-input{
+input {
   height: 3vmin;
   width: 30vmin;
 }

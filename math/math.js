@@ -1078,10 +1078,10 @@ function updateView() {
 
         <div class="mainPart panel footer">         
             <div class="levels" >
-                <button class="excercise"  onclick="${newExercise.name}()">Ny nivå ${model.level}-oppgave</button>
+                <button class="exercise"  onclick="${newExercise.name}()">Ny nivå ${model.level}-oppgave</button>
                 <div style="width: 40px"></div>
                 <input type="text" oninput="model.ownExercise=this.value"/>
-                <button class="excercise" onclick="${newCustomExercise.name}()">Ny egen oppgave</button>
+                <button class="exercise" onclick="${newCustomExercise.name}()">Ny egen oppgave</button>
             </div>
             <div class="levels">
                 Nivåer:
@@ -1217,3 +1217,4 @@ function createText(fn, step) {
         <div class="step"><i>${step || '&nbsp;'}</i></div>
         `;
 }
+

@@ -2,7 +2,7 @@ function createMenuHtml(options, onGoingMathOperation) {
     const name = onGoingMathOperation && onGoingMathOperation.name;
     const operations = Object.keys(options).filter(isOperationAvailable);
     return operations.map(f => `
-        <button class="${name === f ? 'ongoing' : ''}" onclick="selectMath('${f}')">${getIcon(f)}</button>
+        <button class="${name === f ? 'ongoing' : ''}" onclick="${selectMath.name}('${f}')">${getIcon(f)}</button>
     `).join('');
 }
 
@@ -30,7 +30,7 @@ function createHtml(node, highlight, showOperator) {
     const isLeaf = node.value != undefined;
     const isActive = getIsActive(highlight, node);
     const cssClass = isActive ? 'highlight' : '';
-    const onclick = isActive ? `onclick="doMath('${indexesFromNode(node)}')"` : '';
+    const onclick = isActive ? `onclick="${doMath.name}('${indexesFromNode(node)}')"` : '';
     const operatorHtml = showOperator ? `<div>${node.parent.operator.trim()}</div>` : '';
     const includeOperatorInSameHtml =
         node.operator !== '='

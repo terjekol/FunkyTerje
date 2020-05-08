@@ -1,3 +1,4 @@
+const 
 const model = {
     level: 4,
     mathText: 'x+3=5',
@@ -13,70 +14,79 @@ const model = {
         selectNumber: 'Velg et tall.',
     },
     mathOperations: {
-        mergeTerms: {
-            steps: ['selectOneTerm', 'selectOneTerm'],
-            icon: '∑',//'⭨⭩\n•',
-            description: 'Slå sammen ledd',
-            levels: {
-                first: 1,
-            }
-        },
-        subtractTermOnBothSides: {
-            steps: ['selectOneTerm'],
-            icon: '|&minus;',
-            description: 'Trekke fra på begge sider av ligningen',
-            levels: {
-                first: 2,
-                last: 3,
-            }
-        },
-        moveTermToOtherSide: {
-            steps: ['selectOneTerm'],
-            icon: '↷\n=',
-            description: 'Flytte ledd til den andre siden av ligningen',
-            levels: {
-                first: 4,
-            }
-        },
-        divideBothSides: {
-            steps: ['selectTopLevelFactor'],
-            icon: '|÷',
-            description: 'Dele begge sider av ligningen',
-            levels: {
-                first: 5,
-            }
-        },
-        reduceFraction: {
-            steps: ['selectFactorInNumerator', 'selectFactorInDenominator'],
-            icon: '/\n‒\n/',
-            description: 'Forkorte brøk',
-            levels: {
-                first: 5,
-            }
-        },        
-        primeFactorize: {
-            steps: ['selectNumber'],
-            icon: '□\n⭩⭨\n□×□',
-            description: 'Primtallsfaktorisere',
-            levels: {
-                first: 6,
-            }
-        },
-        undo: {
-            steps: [],
-            icon: '^⮪',
-            description: 'Angre',
-            levels: {
-                first: 0,
-            }
-        },
-        redo: {
-            steps: [],
-            icon: '^⮫',
-            description: 'Gjøre omigjen',
-            levels: {
-                first: 0,
-            }
-        },        
     },
 };
+
+model.mathOperations[mergeTerms.name] = {
+    steps: ['selectOneTerm', 'selectOneTerm'],
+    icon: '∑',//'⭨⭩\n•',
+    description: 'Slå sammen ledd',
+    levels: {
+        first: 1,
+    }
+};
+
+model.mathOperations[subtractTermOnBothSides.name] = {
+    steps: ['selectOneTerm'],
+    icon: '|&minus;',
+    description: 'Trekke fra på begge sider av ligningen',
+    levels: {
+        first: 2,
+        last: 3,
+    }
+};
+
+model.mathOperations[moveTermToOtherSide.name] = {
+    steps: ['selectOneTerm'],
+    icon: '↷\n=',
+    description: 'Flytte ledd til den andre siden av ligningen',
+    levels: {
+        first: 4,
+    }
+};
+
+model.mathOperations[divideBothSides.name] = {
+    steps: ['selectTopLevelFactor'],
+    icon: '|÷',
+    description: 'Dele begge sider av ligningen',
+    levels: {
+        first: 5,
+    }
+};
+
+model.mathOperations[reduceFraction.name] = {
+    steps: ['selectFactorInNumerator', 'selectFactorInDenominator'],
+    icon: '/\n‒\n/',
+    description: 'Forkorte brøk',
+    levels: {
+        first: 5,
+    }
+};
+
+model.mathOperations[primeFactorize.name] = {
+    steps: ['selectNumber'],
+    icon: '□\n⭩⭨\n□×□',
+    description: 'Primtallsfaktorisere',
+    levels: {
+        first: 6,
+    }
+};
+
+model.mathOperations[undo.name] = {
+    steps: [],
+    icon: '^⮪',
+    description: 'Angre',
+    levels: {
+        first: 0,
+    }
+};
+
+model.mathOperations[redo.name] = {
+    steps: [],
+    icon: '^⮫',
+    description: 'Gjøre omigjen',
+    levels: {
+        first: 0,
+    }
+};
+

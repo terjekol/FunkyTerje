@@ -17,7 +17,9 @@ function isLetter(node) {
 }
 
 function isNumber(node) {
-    return node.value && node.value.split('').filter(c => c < '0' || c > '9').length === 0;
+    return typeof (node.value) === 'string'
+        && node.value.length > 0
+        && node.value.split('').filter(c => c < '0' || c > '9').length === 0;
 }
 
 function isUnaryMinus(node) {

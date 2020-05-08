@@ -348,7 +348,7 @@ function mergeConstantAndConstant(selectedNode1, selectedNode2) {
     const isPositive2 = constant2 > 0;
     if (newSum === 0) {
         removeNode(selectedNode1);
-        replaceNode(selectedNode2, {value: 0});
+        replaceNode(selectedNode2, {value: '0'});
     } else if (isPositive1 === isPositive2) {
         adjustConstant(selectedNode1, newSum);
         removeNode(selectedNode2);

@@ -58,7 +58,7 @@
             const history = model.history;
             const index = history.index;
             const allItems = history.items;
-            const limits = isPreHistory ? [0, index] : [index+1, allItems.length];
+            const limits = isPreHistory ? [0, index] : [index + 1, allItems.length];
             const items = model.history.items.slice(...limits);
             return items.map(mathText => `
                 <div id="mathContent" class="math">
@@ -75,12 +75,18 @@
         function newCustomExercise() {
             model.errorMessage = '';
             let result = null;
-            try { result = parseMathText(model.ownExercise); } catch (error) { }
-            if (result !== null) newExerciseImpl(model.ownExercise);
-            else model.errorMessage = `Kan ikke tolke uttrykket <tt>${model.ownExercise}</tt>`;
+            try {
+                result = parseMathText(model.ownExercise);
+            } catch (error) {
+                model.errorMessage = `Kan ikke tolke uttrykket <tt>${model.ownExercise}</tt>`;
+                updateView();
+                return;
+            }
+            newExerciseImpl(model.ownExercise);
         }
 
         function newExerciseImpl(exercise) {
+            model.errorMessage = null;
             model.mathText = exercise;
             model.history.items.length = 0;
             model.history.items.push(exercise);

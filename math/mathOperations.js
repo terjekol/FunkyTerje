@@ -37,7 +37,7 @@ function doMath(arg) {
         return;
     }
     func(...args);
-    if (['undo', 'redo'].includes(operation.name)) {
+    if ([undo.name, redo.name].includes(operation.name)) {
         resetAndUpdateView();
         return;
     }

@@ -2,7 +2,7 @@ newExercise();
 
 function updateView() {
     document.getElementById('app').innerHTML = `
-        <div class="mainPart history historyPre" onload="this.scrollTop = this.scrollHeight">
+        <div class="mainPart history historyPre">
             ${createHistoryHtml(true)}
         </div>
         <div id="mathContent" class="math mainPart">

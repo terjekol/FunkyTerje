@@ -74,7 +74,7 @@ function newExerciseImpl(exercise) {
 }
 
 function createLevelsMenuHtml() {
-    return range(0, 7).map(level => `
+    return range(1, 7).map(level => `
         <button class="level ${level === model.level ? 'selectedLevel' : ''}"
                 onclick="${selectLevel.name}(${level})">
             ${level}

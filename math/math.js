@@ -481,7 +481,7 @@ function selectMathImpl() {
 function doMath(arg) {
     const operation = model.onGoingMathOperation;
     const args = operation.arguments;
-    if (args.length === 0 && ['mergeTerms', 'reduceFraction'].includes(operation.name)) {
+    if (args.length === 0 && [mergeTerms.name, reduceFraction.name].includes(operation.name)) {
         nextStep(arg);
         return;
     }
@@ -1217,4 +1217,3 @@ function createText(fn, step) {
         <div class="step"><i>${step || '&nbsp;'}</i></div>
         `;
 }
-

@@ -966,8 +966,8 @@ function cloneNode(node) {
 }
 
 const model = {
-    level: 4,
-    mathText: 'x+3=5',
+    level: 1,
+    mathText: 'x=1+2',
     history: {
         items: [],
         index: 0,
@@ -1080,7 +1080,7 @@ function updateView() {
             <div class="levels" >
                 <button class="exercise"  onclick="${newExercise.name}()">Ny nivå ${model.level}-oppgave</button>
                 <div style="width: 40px"></div>
-                <input type="text" oninput="model.ownExercise=this.value"/>
+                <input type="text" oninput="${Object.keys({model})[0]}.ownExercise=this.value"/>
                 <button class="exercise" onclick="${newCustomExercise.name}()">Ny egen oppgave</button>
             </div>
             <div class="levels">
@@ -1217,3 +1217,5 @@ function createText(fn, step) {
         <div class="step"><i>${step || '&nbsp;'}</i></div>
         `;
 }
+
+

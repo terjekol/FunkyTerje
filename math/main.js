@@ -22,7 +22,7 @@ function updateView() {
             <div class="levels" >
                 <button class="exercise"  onclick="${newExercise.name}()">Ny nivå ${model.level}-oppgave</button>
                 <div style="width: 40px"></div>
-                <input type="text" oninput="model.ownExercise=this.value"/>
+                <input type="text" oninput="${Object.keys({model})[0]}.ownExercise=this.value"/>
                 <button class="exercise" onclick="${newCustomExercise.name}()">Ny egen oppgave</button>
             </div>
             <div class="levels">

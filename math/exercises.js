@@ -17,7 +17,7 @@ const levelExerciseFunctions = [
 
 function createEquationWithNeedForPrimeFactorization() {
     // ax=b
-    const commonFactorCount = randomNumberFromRange(1, 4);
+    const commonFactorCount = 1;//randomNumberFromRange(1, 4);
     const commonFactors = range(0, commonFactorCount).map(() => randomPrime());
     const product = commonFactors.reduce((value, total) => total * value, 1);
     const a = product * randomPrime();

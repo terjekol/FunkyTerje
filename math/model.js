@@ -1,6 +1,7 @@
 const model = {
     level: 1,
     mathText: 'x=1+2',
+    ownExercise: '',
     history: {
         items: [],
         index: 0,

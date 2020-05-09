@@ -91,7 +91,7 @@ function isFunction(functionToCheck) {
 
 function createEquationWithNeedForPrimeFactorization() {
     // ax=b
-    const commonFactorCount = randomNumberFromRange(1, 4);
+    const commonFactorCount = 1;//randomNumberFromRange(1, 4);
     const commonFactors = range(0, commonFactorCount).map(() => randomPrime());
     const product = commonFactors.reduce((value, total) => total * value, 1);
     const a = product * randomPrime();
@@ -968,6 +968,7 @@ function cloneNode(node) {
 const model = {
     level: 1,
     mathText: 'x=1+2',
+    ownExercise: '',
     history: {
         items: [],
         index: 0,
@@ -1060,7 +1061,7 @@ newExercise();
 
 function updateView() {
     document.getElementById('app').innerHTML = `
-        <div class="mainPart history">
+        <div class="mainPart history historyPre" onload="this.scrollTop = this.scrollHeight">
             ${createHistoryHtml(true)}
         </div>
         <div id="mathContent" class="math mainPart">
@@ -1080,7 +1081,7 @@ function updateView() {
             <div class="levels" >
                 <button class="exercise"  onclick="${newExercise.name}()">Ny nivå ${model.level}-oppgave</button>
                 <div style="width: 40px"></div>
-                <input type="text" oninput="${Object.keys({model})[0]}.ownExercise=this.value"/>
+                <input type="text" oninput="${Object.keys({x: model})[0]}.${Object.keys(model)[2]}=this.value"/>
                 <button class="exercise" onclick="${newCustomExercise.name}()">Ny egen oppgave</button>
             </div>
             <div class="levels">
@@ -1089,6 +1090,8 @@ function updateView() {
             </div>                    
         </div>
     `;
+    const el = document.getElementsByClassName('historyPre')[0];
+    el.scrollTop = el.scrollHeight;
 }
 
 function createHistoryHtml(isPreHistory) {
@@ -1217,5 +1220,3 @@ function createText(fn, step) {
         <div class="step"><i>${step || '&nbsp;'}</i></div>
         `;
 }
-
-

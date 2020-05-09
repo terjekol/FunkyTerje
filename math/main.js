@@ -2,7 +2,7 @@ newExercise();
 
 function updateView() {
     document.getElementById('app').innerHTML = `
-        <div class="mainPart history">
+        <div class="mainPart history historyPre" onload="this.scrollTop = this.scrollHeight">
             ${createHistoryHtml(true)}
         </div>
         <div id="mathContent" class="math mainPart">
@@ -22,7 +22,7 @@ function updateView() {
             <div class="levels" >
                 <button class="exercise"  onclick="${newExercise.name}()">Ny nivå ${model.level}-oppgave</button>
                 <div style="width: 40px"></div>
-                <input type="text" oninput="${Object.keys({model})[0]}.ownExercise=this.value"/>
+                <input type="text" oninput="${Object.keys({x: model})[0]}.${Object.keys(model)[2]}=this.value"/>
                 <button class="exercise" onclick="${newCustomExercise.name}()">Ny egen oppgave</button>
             </div>
             <div class="levels">
@@ -31,6 +31,8 @@ function updateView() {
             </div>                    
         </div>
     `;
+    const el = document.getElementsByClassName('historyPre')[0];
+    el.scrollTop = el.scrollHeight;
 }
 
 function createHistoryHtml(isPreHistory) {

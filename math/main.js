@@ -38,6 +38,8 @@ function updateView() {
             <div class="levels">
                 Nivåer:
                 ${createLevelsMenuHtml()}
+                <button onclick="window.open('https://m.me/playterje')" class="level kontakt">Kontakt PlayTerje</div>
+
             </div>                    
         </div>
     `;

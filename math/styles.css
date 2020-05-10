@@ -155,6 +155,11 @@ button.level {
   font-size: 2.5vmin;
 }
 
+button.kontakt{
+  color: gray;
+  font-size: 1.4vmin;
+}
+
 button.video {
   height: 2vmin;
   color: gray;

@@ -969,6 +969,7 @@ const model = {
     level: 1,
     mathText: 'x=1+2',
     ownExercise: '',
+    showVideos: true,
     history: {
         items: [],
         index: 0,
@@ -980,8 +981,16 @@ const model = {
         selectTopLevelFactor: 'Velg et ledd eller en faktor i et ledd.',
         selectNumber: 'Velg et tall.',
     },
-    mathOperations: {
-    },
+    mathOperations: {},
+    youTubeVideoIds: [
+        '',
+        '4yY3GJ2VJR8',
+        'ppjutK7iwu8',
+        'kPK-rbW7Jy8',
+        'zAbQeidbWdc',
+        'rgdP8DK9cQ8',
+        'QejFqIPpos4',
+    ],    
 };
 
 model.mathOperations[mergeTerms.name] = {
@@ -1060,8 +1069,9 @@ model.mathOperations[redo.name] = {
 newExercise();
 
 function updateView() {
+    const videoHtml = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${model.youTubeVideoIds[model.level]}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
     document.getElementById('app').innerHTML = `
-        <div class="mainPart history historyPre" onload="this.scrollTop = this.scrollHeight">
+        <div class="mainPart history historyPre">
             ${createHistoryHtml(true)}
         </div>
         <div id="mathContent" class="math mainPart">
@@ -1076,7 +1086,16 @@ function updateView() {
                 ${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}
             </div>
         </div>
-
+        <div class="mainPart">
+            <div>
+                <button class="video"
+                    onclick="${toggleVideos.name}()">
+                    ${model.showVideos ? 'Skjul' :  'Vis' }
+                    video
+                </button>
+            </div>
+            ${model.showVideos ? videoHtml : ''}
+        </div>
         <div class="mainPart panel footer">         
             <div class="levels" >
                 <button class="exercise"  onclick="${newExercise.name}()">Ny nivå ${model.level}-oppgave</button>
@@ -1087,11 +1106,18 @@ function updateView() {
             <div class="levels">
                 Nivåer:
                 ${createLevelsMenuHtml()}
+                <button onclick="window.open('https://m.me/playterje')" class="level kontakt">Kontakt PlayTerje</div>
+
             </div>                    
         </div>
     `;
     const el = document.getElementsByClassName('historyPre')[0];
     el.scrollTop = el.scrollHeight;
+}
+
+function toggleVideos(){
+    model.showVideos = !model.showVideos;
+    updateView();
 }
 
 function createHistoryHtml(isPreHistory) {
@@ -1220,3 +1246,5 @@ function createText(fn, step) {
         <div class="step"><i>${step || '&nbsp;'}</i></div>
         `;
 }
+
+

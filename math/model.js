@@ -2,6 +2,7 @@ const model = {
     level: 1,
     mathText: 'x=1+2',
     ownExercise: '',
+    showVideos: true,
     history: {
         items: [],
         index: 0,
@@ -13,8 +14,16 @@ const model = {
         selectTopLevelFactor: 'Velg et ledd eller en faktor i et ledd.',
         selectNumber: 'Velg et tall.',
     },
-    mathOperations: {
-    },
+    mathOperations: {},
+    youTubeVideoIds: [
+        '',
+        '4yY3GJ2VJR8',
+        'ppjutK7iwu8',
+        'kPK-rbW7Jy8',
+        'zAbQeidbWdc',
+        'rgdP8DK9cQ8',
+        'QejFqIPpos4',
+    ],    
 };
 
 model.mathOperations[mergeTerms.name] = {

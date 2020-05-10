@@ -86,6 +86,13 @@ div.math {
   padding: 0;
 }
 
+div.history{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
 div.history > div.math {
   font-size: 2.4vmin;
   color: rgb(128, 128, 128);
@@ -146,6 +153,12 @@ button.level {
   height: 5vmin;
   color: rgb(156, 220, 254);
   font-size: 2.5vmin;
+}
+
+button.video {
+  height: 2vmin;
+  color: gray;
+  font-size: 1.5vmin;
 }
 
 button.selectedLevel {

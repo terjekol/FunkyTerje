@@ -1,6 +1,7 @@
 newExercise();
 
 function updateView() {
+    const videoHtml = `<iframe width="560" height="315" src="https://www.youtube.com/embed/${model.youTubeVideoIds[model.level]}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
     document.getElementById('app').innerHTML = `
         <div class="mainPart history historyPre">
             ${createHistoryHtml(true)}
@@ -17,7 +18,16 @@ function updateView() {
                 ${createMenuHtml(model.mathOperations, model.onGoingMathOperation)}
             </div>
         </div>
-
+        <div class="mainPart">
+            <div>
+                <button class="video"
+                    onclick="${toggleVideos.name}()">
+                    ${model.showVideos ? 'Skjul' :  'Vis' }
+                    video
+                </button>
+            </div>
+            ${model.showVideos ? videoHtml : ''}
+        </div>
         <div class="mainPart panel footer">         
             <div class="levels" >
                 <button class="exercise"  onclick="${newExercise.name}()">Ny nivå ${model.level}-oppgave</button>
@@ -33,6 +43,11 @@ function updateView() {
     `;
     const el = document.getElementsByClassName('historyPre')[0];
     el.scrollTop = el.scrollHeight;
+}
+
+function toggleVideos(){
+    model.showVideos = !model.showVideos;
+    updateView();
 }
 
 function createHistoryHtml(isPreHistory) {

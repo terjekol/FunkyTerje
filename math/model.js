@@ -95,9 +95,9 @@ model.mathOperations[reduceFraction.name] = {
     steps: ['selectFactorInNumerator', 'selectFactorInDenominator'],
     icon: '/\n‒\n/',
     svg: {
-        path: 'm 6 1 l -3.7052 9.6118 h -0.894 l 3.6897 -9.6118 z m 0 11 h -5.147 v -0.8268 h 5.147 z m 0 0.6 l -3.7052 9.6118 h -0.894 l 3.6897 -9.6118 z',
+        path: 'M 10 1 l -3.7052 9.6118 h -0.894 l 3.6897 -9.6118 z m 3 12 h -12 v -0.8268 h 12 z m -3 1.3 l -3.7052 9.6118 h -0.894 l 3.6897 -9.6118 z',
         viewBox: {
-            width: 7,
+            width: 14,
             height: 24,
         }
     },

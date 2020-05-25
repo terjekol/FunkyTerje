@@ -95,10 +95,10 @@ model.mathOperations[reduceFraction.name] = {
     steps: ['selectFactorInNumerator', 'selectFactorInDenominator'],
     icon: '/\n‒\n/',
     svg: {
-        path: 'M 0.5796 5.4688 h -0.4796 v -5.3688 h 0.4796 z m 3 -2.6 h -1.7198 v -0.4989 h 1.7198 z',
+        path: 'm 6 1 l -3.7052 9.6118 h -0.894 l 3.6897 -9.6118 z m 0 11 h -5.147 v -0.8268 h 5.147 z m 0 0.6 l -3.7052 9.6118 h -0.894 l 3.6897 -9.6118 z',
         viewBox: {
-            width: 3.5,
-            height: 5.5,
+            width: 7,
+            height: 24,
         }
     },
     description: 'Forkorte brøk',

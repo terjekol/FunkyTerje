@@ -14,11 +14,18 @@ function isOperationAvailable(operationName) {
 
 function getIcon(f) {
     if (f === 'error') return '⚠';
-    const icon = model.mathOperations[f].icon;
-    if (icon[0] === '^') return `<span style="font-size: 160%">${icon.substring(1)}</span>`;
-    return icon
-        .replace(/\n/g, '<br/>')
-        .replace(/ /g, '&nbsp;');
+    // const icon = model.mathOperations[f].icon;
+    // if (icon[0] === '^') return `<span style="font-size: 160%">${icon.substring(1)}</span>`;
+    // return icon
+    //     .replace(/\n/g, '<br/>')
+    //     .replace(/ /g, '&nbsp;');
+    const svg = model.mathOperations[f].svg;
+
+    return `
+        <svg class="svgIcon" viewBox="0 0 ${svg.viewBox.width} ${svg.viewBox.height}">
+            <path d="${svg.path}" />
+        </svg>
+    `;
 }
 
 function createMathText(mathText, highlight) {
